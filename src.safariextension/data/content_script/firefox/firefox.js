@@ -9,7 +9,3 @@ var background = {
     self.port.on(id, callback);
   }
 };
-
-var manifest = {
-  hash: self.options.hash
-};

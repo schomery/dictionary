@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>Author</key>
-	<string>Unkown</string>
+	<string>Jeremy Schomery</string>
 	<key>Builder Version</key>
 	<string>10600.5.17</string>
 	<key>CFBundleDisplayName</key>
-	<string>Template Extension</string>
+	<string>Dictionary Anywhere</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.add0n.template</string>
+	<string>com.add0n.dictionary</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
@@ -22,19 +22,6 @@
 		<real>5242880</real>
 		<key>Global Page</key>
 		<string>lib/safari/background.html</string>
-		<key>Toolbar Items</key>
-		<array>
-			<dict>
-				<key>Identifier</key>
-				<string>toolbarbutton</string>
-				<key>Image</key>
-				<string>data/icons/16.png</string>
-				<key>Label</key>
-				<string>toolbar</string>
-				<key>Popover</key>
-				<string>popup</string>
-			</dict>
-		</array>
 	</dict>
 	<key>Content</key>
 	<dict>
@@ -44,6 +31,7 @@
 			<array>
 				<string>data/content_script/safari/safari.js</string>
 				<string>data/content_script/inject.js</string>
+				<string>data/panel/inject.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>
@@ -52,7 +40,7 @@
 		</array>
 	</dict>
 	<key>Description</key>
-	<string>description</string>
+	<string>Dictionary Anywhere provides access to a floating multilingual Google Translate panel on any webpage</string>
 	<key>DeveloperIdentifier</key>
 	<string>2C3W8RZ8ND</string>
 	<key>ExtensionInfoDictionaryVersion</key>
@@ -68,6 +56,6 @@
 		</dict>
 	</dict>
 	<key>Website</key>
-	<string>http://add0n.com/index.html</string>
+	<string>http://add0n.com/dictionary.html</string>
 </dict>
 </plist>

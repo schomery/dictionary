@@ -138,38 +138,6 @@ app.tab = {
   }
 };
 
-app.notification = function (title, text) {
-  var notification = webkitNotifications.createNotification(
-    safari.extension.baseURI + 'data/icon48.png',  title,  text
-  );
-  notification.show();
-  window.setTimeout(function () {
-    notification.cancel();
-  }, 5000);
-};
-
-app.play = (function () {
-  var canPlay = false, audio;
-  try {
-    audio = new Audio();
-    canPlay = audio.canPlayType('audio/mpeg');
-  } catch (e) {}
-  if (!canPlay) {
-    audio = document.createElement('iframe');
-    document.body.appendChild(audio);
-  }
-  return function (url) {
-    if (canPlay) {
-      audio.setAttribute('src', url);
-      audio.play();
-    }
-    else {
-      audio.removeAttribute('src');
-      audio.setAttribute('src', url);
-    }
-  };
-})();
-
 app.version = function () {
   return safari.extension.displayVersion;
 };
@@ -207,42 +175,36 @@ app.contentScript = (function () {
   };
 })();
 
-app.contextMenu = (function () {
-  var onSelection = [];
-  var onPage = [];
-
-  safari.application.addEventListener('contextmenu', function (e) {
-    var selected = e.userInfo && 'selectedText' in e.userInfo && e.userInfo.selectedText;
-
-    onPage.forEach(function (arr, i) {
-      e.contextMenu.appendContextMenuItem('igtranslator.onPage:' + i, arr[0]);
-    });
-    if (selected) {
-      onSelection.forEach(function (arr, i) {
-        e.contextMenu.appendContextMenuItem('igtranslator.onSelection:' + i, arr[0]);
-      });
+app.panel = (function () {
+  var callbacks = {};
+  safari.application.addEventListener('message', function (e) {
+    if (callbacks[e.message.id]) {
+      callbacks[e.message.id].call(e.target, e.message.data);
     }
   }, false);
-  safari.application.addEventListener('command', function (e) {
-    var cmd = e.command;
-    if (cmd.indexOf('igtranslator.onPage:') !== -1) {
-      var i = parseInt(cmd.substr(20));
-      onPage[i][1]();
-    }
-    if (cmd.indexOf('igtranslator.onSelection:') !== -1) {
-      var j = parseInt(cmd.substr(25));
-      onSelection[j][1]();
-    }
-  }, false);
-
   return {
-    create: function (title, type, callback) {
-      if (type === 'page') {
-        onPage.push([title, callback]);
+    send: function (id, data, global) {
+      if (global) {
+        safari.application.browserWindows.forEach(function (browserWindow) {
+          browserWindow.tabs.forEach(function (tab) {
+            if (tab.page && tab.url.indexOf('translate.google.com') !== -1) {
+              tab.page.dispatchMessage(id, data);
+            }
+          });
+        });
       }
-      if (type === 'selection') {
-        onSelection.push([title, callback]);
+      else if ('page' in this) {
+        this.page.dispatchMessage(id, data);
       }
+      else {
+        var url = safari.application.activeBrowserWindow.activeTab.url;
+        if (url.indexOf('translate.google.com') !== -1) {
+          safari.application.activeBrowserWindow.activeTab.page.dispatchMessage(id, data);
+        }
+      }
+    },
+    receive: function (id, callback) {
+      callbacks[id] = callback;
     }
   };
 })();

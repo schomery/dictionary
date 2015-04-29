@@ -8,28 +8,33 @@
   "permissions": [
     "storage",
     "tabs",
-    "background",
     "webRequest",
+    "webRequestBlocking",
     "<all_urls>"
   ],
-  "web_accessible_resources": [],
+  "web_accessible_resources": [
+    "data/icons/activator.png",
+    "data/icons/loading.gif"
+  ],
   "background": {
     "page": "lib/chrome/background.html"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
-    "css": ["data/content_script/inject.css"],
-    "run_at": "document_start",
-    "all_frames": false
-  },
-  {
-    "matches": ["https://translate.google.com/*", "http://translate.google.com/*"],
-    "js": ["data/panel/chrome/chrome.js", "data/panel/inject.js"],
-    "css": ["data/panel/inject.css"],
-    "run_at": "document_start",
-    "all_frames": true
-  }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
+      "css": ["data/content_script/inject.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://translate.google.com/*", "http://translate.google.com/*"],
+      "js": ["data/panel/chrome/chrome.js", "data/panel/inject.js"],
+      "css": ["data/panel/inject.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
   "options_page": "data/options/index.html",
   "homepage_url": "http://add0n.com/dictionary.html",
   "icons": {

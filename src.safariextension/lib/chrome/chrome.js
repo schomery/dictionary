@@ -1,4 +1,3 @@
-/* globals webkitNotifications*/
 'use strict';
 
 var app = new EventEmitter();
@@ -53,7 +52,7 @@ app.contentScript = (function () {
     },
     receive: function (id, callback) {
       chrome.runtime.onMessage.addListener(function (message, sender) {
-        if (message.method === id && sender.tab && sender.tab.url.indexOf('http') === 0) {
+        if (message.method === id && sender.tab) {
           callback.call(sender.tab, message.data);
         }
       });
@@ -75,7 +74,10 @@ app.panel = (function () {
         chrome.tabs.sendMessage(this.id, {method: id, data: data}, function () {});
       }
       else {
-        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.query({
+          active: true,
+          currentWindow: true
+        }, function (tabs) {
           tabs.forEach(function (tab) {
             chrome.tabs.sendMessage(tab.id, {method: id, data: data}, function () {});
           });
@@ -84,7 +86,7 @@ app.panel = (function () {
     },
     receive: function (id, callback) {
       chrome.runtime.onMessage.addListener(function (message, sender) {
-        if (message.method === id && sender.tab && sender.tab.url.indexOf('http') === 0) {
+        if (message.method === id && sender.tab && sender.url.indexOf('translate.google') !== -1) {
           callback.call(sender.tab, message.data);
         }
       });
@@ -143,3 +145,38 @@ app.options = {
     });
   }
 };
+// http manipulations
+chrome.webRequest.onHeadersReceived.addListener(
+  function (details) {
+    var headers = details.responseHeaders;
+    for (var i = headers.length - 1; i >= 0; --i) {
+      var header = headers[i].name.toLowerCase();
+      if (header === 'x-frame-options' || header === 'frame-options') {
+        headers.splice(i, 1);
+      }
+    }
+    return {responseHeaders: headers};
+  },
+  {
+    urls: ['https://translate.google.com/*', 'http://translate.google.com/*'],
+    types: ['sub_frame']
+  },
+  ['blocking', 'responseHeaders']
+);
+chrome.webRequest.onHeadersReceived.addListener(
+  function (details) {
+    var headers = details.responseHeaders;
+    for (var i = headers.length - 1; i >= 0; --i) {
+      var header = headers[i];
+      if (header === 'Content-Security-Policy') {
+        headers[i] = header.replace(/frame\-src(.*);/, '$1 https://translate.google.com http://translate.google.com');
+      }
+    }
+    return {responseHeaders: headers};
+  },
+  {
+    urls: ['<all_urls>'],
+    types: ['main_frame']
+  },
+  ['blocking', 'responseHeaders']
+);

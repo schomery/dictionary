@@ -4,15 +4,11 @@
 var self          = require('sdk/self'),
     data          = self.data,
     sp            = require('sdk/simple-prefs'),
-    buttons       = require('sdk/ui/button/action'),
-    Request       = require('sdk/request').Request,
     prefs         = sp.prefs,
     pageMod       = require('sdk/page-mod'),
-    pageWorker    = require('sdk/page-worker'),
     tabs          = require('sdk/tabs'),
     timers        = require('sdk/timers'),
     loader        = require('@loader/options'),
-    contextMenu   = require('sdk/context-menu'),
     array         = require('sdk/util/array'),
     unload        = require('sdk/system/unload'),
     {on, off, once, emit} = require('sdk/event/core'),
@@ -34,7 +30,7 @@ exports.removeListener = function removeListener (type, listener) {
 exports.contentScript = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
-    include: ['http://*', 'https://*'],
+    include: ['http://*', 'https://*', 'file:///*'],
     contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
@@ -220,12 +216,23 @@ exports.options = (function () {
   };
 })();
 
-// allow framing for translate.google.com
+// http manipulations
 var httpResponseObserver = {
   observe: function (subject) {
     var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
+    // make sure translate.google.com is in 'Content-Security-Policy'
+    var csp;
+    try {
+      csp = httpChannel.getResponseHeader('Content-Security-Policy');
+    } catch (e) {}
+    if (csp) {
+      csp = csp.replace(/frame\-src(.*);/, '$1 https://translate.google.com http://translate.google.com');
+      httpChannel.setResponseHeader('Content-Security-Policy', csp, false);
+    }
+    // allow translate.google.com to be loaded on iframe
     if (httpChannel.URI.host === 'translate.google.com') {
       httpChannel.setResponseHeader('X-Frame-Options', '', false);
+      httpChannel.setResponseHeader('frame-options', '', false);
     }
   },
   get observerService() {

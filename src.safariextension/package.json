@@ -13,7 +13,7 @@
   "icon64": "data/icons/64.png",
   "permissions": {
     "private-browsing": true,
-    "cross-domain-content": ["http://translate.google.com/", "https://translate.google.com/"]
+    "cross-domain-content": ["http://translate.google.com/*", "https://translate.google.com/*", "https://translate.google.com/m/translate#auto/en/available"]
   },
   "preferences": [{
     "name": "openOptions",

@@ -53,3 +53,6 @@ app.panel.receive('hashchange', function (hash) {
 });
 app.panel.receive('resize', app.contentScript.send.bind(this, 'resize'));
 app.panel.receive('loaded', app.contentScript.send.bind(this, 'loaded'));
+app.contentScript.receive('hashrequest', function () {
+  app.contentScript.send.call(this, 'hashchange', app.storage.read('hash'));
+});
