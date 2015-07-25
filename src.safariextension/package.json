@@ -4,7 +4,7 @@
   "description": "Dictionary Anywhere provides access to a floating multilingual Google Translate panel on any webpage.",
   "id": "jid0-fbHwsGfb6kJyq2hj65KnbGte3yT",
   "license": "Mozilla Public License, version 2.0",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Jeremy Schomery",
   "lib": "lib",
   "main": "common",

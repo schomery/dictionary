@@ -27,7 +27,7 @@ exports.removeListener = function removeListener (type, listener) {
   off(exports, type, listener);
 };
 
-exports.contentScript = (function () {
+exports.inject = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
     include: ['http://*', 'https://*', 'file:///*'],

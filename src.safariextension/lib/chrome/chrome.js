@@ -29,7 +29,7 @@ app.storage = (function () {
   };
 })();
 
-app.contentScript = (function () {
+app.inject = (function () {
   return {
     send: function (id, data, global) {
       if (global) {

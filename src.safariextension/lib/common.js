@@ -48,11 +48,11 @@ app.panel.receive('hashchange', function (hash) {
   if (part.length >= 2 && part[0][0] === '#') {
     var tmp = part[0] + '/' + part[1];
     app.storage.write('hash', tmp);
-    app.contentScript.send('hashchange', tmp, true);
+    app.inject.send('hashchange', tmp, true);
   }
 });
-app.panel.receive('resize', app.contentScript.send.bind(this, 'resize'));
-app.panel.receive('loaded', app.contentScript.send.bind(this, 'loaded'));
-app.contentScript.receive('hashrequest', function () {
-  app.contentScript.send.call(this, 'hashchange', app.storage.read('hash'));
+app.panel.receive('resize', app.inject.send.bind(this, 'resize'));
+app.panel.receive('loaded', app.inject.send.bind(this, 'loaded'));
+app.inject.receive('hashrequest', function () {
+  app.inject.send.call(this, 'hashchange', app.storage.read('hash'));
 });

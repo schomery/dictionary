@@ -57,10 +57,14 @@ var panel = (function () {
     }
   });
   background.receive('resize', function (height) {
-    iframe.style.height = height;
+    if (iframe) {
+      iframe.style.height = height;
+    }
   });
   background.receive('loaded', function () {
-    iframe.classList.remove('itanywhere-loading');
+    if (iframe) {
+      iframe.classList.remove('itanywhere-loading');
+    }
   });
   background.send('hashrequest');
   return {
@@ -126,7 +130,7 @@ var mouse = (function () {
           panel.hide();
         }
       }, 100);
-    }
+    };
   })();
 
   return {
