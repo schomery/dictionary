@@ -227,7 +227,7 @@ var httpResponseObserver = {
     } catch (e) {}
     if (csp) {
       csp = csp.replace(/frame\-src(.*);/, '$1 https://translate.google.com http://translate.google.com');
-      httpChannel.setResponseHeader('Content-Security-Policy', csp, false);
+      csp = csp.replace('default-src \'none\';', 'default-src translate.google.com;');      httpChannel.setResponseHeader('Content-Security-Policy', csp, false);
     }
     // allow translate.google.com to be loaded on iframe
     if (httpChannel.URI.host === 'translate.google.com') {

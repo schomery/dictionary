@@ -14,7 +14,10 @@ if (window.top !== window) {  // only in frames
     // Add MutationObserver to change size
     var page = document.querySelector('div[class=page]');
     var observer = new MutationObserver(function () {
-      background.send('resize', window.getComputedStyle(page).height);
+      var tmp = window.getComputedStyle(page);
+      if (page && tmp) {
+        background.send('resize', tmp.height);
+      }
     });
 
     // configuration of the observer:

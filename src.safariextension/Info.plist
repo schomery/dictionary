@@ -5,7 +5,7 @@
 	<key>Author</key>
 	<string>Jeremy Schomery</string>
 	<key>Builder Version</key>
-	<string>10600.5.17</string>
+	<string>10600.6.3</string>
 	<key>CFBundleDisplayName</key>
 	<string>Dictionary Anywhere</string>
 	<key>CFBundleIdentifier</key>
@@ -42,7 +42,7 @@
 	<key>Description</key>
 	<string>Dictionary Anywhere provides access to a floating multilingual Google Translate panel on any webpage</string>
 	<key>DeveloperIdentifier</key>
-	<string>2C3W8RZ8ND</string>
+	<string>L62F677Y54</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>

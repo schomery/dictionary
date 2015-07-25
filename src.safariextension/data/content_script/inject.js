@@ -1,30 +1,19 @@
 /* globals background */
 'use strict';
 
-function html (tag, attrbs, parent) {
-  var elem = document.createElement(tag);
-  for (var a in attrbs) {
-    elem.setAttribute(a, attrbs[a]);
-  }
-  if (parent) {
-    parent.appendChild(elem);
-  }
-  return elem;
-}
-
 // pointer
 var pointer = (function () {
   var div, timer;
   return {
     load: function () {
-      div = html('div', {
-        'class': 'itanywhere-activator',
-        'title': 'Google Translator Anywhere'
-      }, document.body);
+      div = document.createElement('div');
+      div.setAttribute('class', 'itanywhere-activator');
+      div.setAttribute('title', 'Google Translator Anywhere');
       div.addEventListener('animationend', function () {
         div.classList.remove('bounceIn');
       });
       div.addEventListener('click', panel.show, false);
+      document.body.appendChild(div);
     },
     unload: function () {
       if (div && div.parentNode) {
@@ -63,7 +52,9 @@ var panel = (function () {
   var iframe;
   background.receive('hashchange', function (hash) {
     panel.hash = hash || panel.hash;
-    iframe.src = 'https://translate.google.com/m/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
+    if (iframe) {
+      iframe.src = 'https://translate.google.com/m/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
+    }
   });
   background.receive('resize', function (height) {
     iframe.style.height = height;
@@ -76,9 +67,10 @@ var panel = (function () {
     phrase: null,
     hash: '#auto/en',
     load: function () {
-      iframe = html('iframe', {
-        'class': 'itanywhere-panel itanywhere-loading'
-      }, document.body);
+      iframe = document.createElement('iframe');
+      iframe.setAttribute('class', 'itanywhere-panel itanywhere-loading');
+      iframe.setAttribute('src', 'about:blank');
+      document.body.appendChild(iframe);
     },
     unload: function () {
       if (iframe && iframe.parentNode) {
@@ -115,27 +107,37 @@ var mouse = (function () {
       return target.value.substring(target.selectionStart, target.selectionEnd).trim();
     }
   }
-  function click (e) {
-    var selected = getSelection(e);
-    if (selected) {
-      pointer.move(e.clientX + 3, e.clientY - 40);
-      panel.phrase = selected;
+  var click = (function () {
+    var id;
+    return function (e) {
+      if (id) {
+        window.clearTimeout(id);
+      }
+      id = window.setTimeout(function () {
+        var selected = getSelection(e);
+        if (selected) {
+          pointer.move(e.clientX + window.scrollX + 3, e.clientY + window.scrollY - 40);
+          panel.phrase = selected;
+        }
+        else {
+          pointer.hide();
+        }
+        if (!pointer.is(e.target)) {
+          panel.hide();
+        }
+      }, 100);
     }
-    else {
-      pointer.hide();
-    }
-    if (!pointer.is(e.target)) {
-      panel.hide();
-    }
-  }
+  })();
 
   return {
     load: function () {
-      document.addEventListener('click', click, false);
+      document.addEventListener('mouseup', click, false);
+      document.addEventListener('keyup', click, false);
     },
     unload: function () {
       try {
-        document.removeEventListener('click', click);
+        document.removeEventListener('mouseup', click);
+        document.removeEventListener('keyup', click);
       }
       catch (e) {}
     }

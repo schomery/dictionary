@@ -169,7 +169,9 @@ chrome.webRequest.onHeadersReceived.addListener(
     for (var i = headers.length - 1; i >= 0; --i) {
       var header = headers[i];
       if (header === 'Content-Security-Policy') {
-        headers[i] = header.replace(/frame\-src(.*);/, '$1 https://translate.google.com http://translate.google.com');
+        headers[i] = header
+          .replace(/frame\-src(.*);/, '$1 https://translate.google.com http://translate.google.com')
+          .replace('default-src \'none\';', 'default-src translate.google.com;');
       }
     }
     return {responseHeaders: headers};
