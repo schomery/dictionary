@@ -34,7 +34,7 @@ exports.inject = (function () {
     contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
-    attachTo: ['top', 'existing'],
+    attachTo: ['top', 'frame', 'existing'],
     contentScriptOptions: {
       hash: prefs.hash || '#auto/en'
     },

@@ -100,6 +100,15 @@ var panel = (function () {
 })();
 // mouse
 var mouse = (function () {
+  function postMessage (msg, reg) {
+    window.postMessage(msg, reg);
+    parent.postMessage(msg, reg);
+    [].forEach.call(document.querySelectorAll('iframe'), function (iframe) {
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(msg, reg);
+      }
+    });
+  }
   function getSelection (e) {
     var selection = window.getSelection();
     var tmp = selection.toString();
@@ -127,21 +136,29 @@ var mouse = (function () {
           pointer.hide();
         }
         if (!pointer.is(e.target)) {
-          panel.hide();
+          postMessage('idanywhere-hide', '*');
         }
       }, 100);
     };
   })();
 
+  function message (e) {
+    if (e.data === 'idanywhere-hide') {
+      panel.hide();
+    }
+  }
+
   return {
     load: function () {
       document.addEventListener('mouseup', click, false);
       document.addEventListener('keyup', click, false);
+      window.addEventListener('message', message, false);
     },
     unload: function () {
       try {
         document.removeEventListener('mouseup', click);
         document.removeEventListener('keyup', click);
+        window.removeEventListener('message', message);
       }
       catch (e) {}
     }
