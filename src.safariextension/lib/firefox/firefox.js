@@ -30,7 +30,7 @@ exports.removeListener = function removeListener (type, listener) {
 exports.inject = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
-    include: ['http://*', 'https://*', 'file:///*'],
+    include: ['http://*', 'https://*', 'file:///*', 'about:reader?*'],
     contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
@@ -181,9 +181,9 @@ exports.options = (function () {
     },
     onAttach: function(worker) {
       array.add(workers, worker);
-      worker.on('pageshow', (w) => array.add(workers, w));
-      worker.on('pagehide', (w) => array.remove(workers, w));
-      worker.on('detach', (w) => array.remove(workers, w));
+      worker.on('pageshow', function() { array.add(workers, this); });
+      worker.on('pagehide', function() { array.remove(workers, this); });
+      worker.on('detach', function() { array.remove(workers, this); });
 
       options_arr.forEach(function (arr) {
         worker.port.on(arr[0], arr[1]);
