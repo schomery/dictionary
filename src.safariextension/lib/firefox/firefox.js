@@ -31,6 +31,7 @@ exports.inject = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
     include: ['http://*', 'https://*', 'file:///*', 'about:reader?*'],
+    exclude: ['https://translate.google.com/m/*', 'http://translate.google.com/m/*'],
     contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),

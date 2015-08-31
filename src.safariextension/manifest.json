@@ -9,6 +9,7 @@
     "storage",
     "tabs",
     "webRequest",
+    "webRequestBlocking",
     "<all_urls>"
   ],
   "web_accessible_resources": [
@@ -21,6 +22,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "exclude_matches": ["http://translate.google.com/m/*", "https://translate.google.com/m/*"],
       "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
       "css": ["data/content_script/inject.css"],
       "run_at": "document_start",
