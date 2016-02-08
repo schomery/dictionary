@@ -1,0 +1,13 @@
+body {
+  overflow: hidden;
+  background-color: transparent !important;
+}
+div[class=gp-footer] {
+  display: none;
+}
+.result-dict-wrapper {
+  box-shadow: none;
+}
+.dictionary {
+  border-bottom-width: 0;
+}
