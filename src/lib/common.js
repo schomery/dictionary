@@ -7,6 +7,21 @@ if (typeof require !== 'undefined') {
 }
 /**** wrapper (end) ****/
 
+/* options */
+app.options.receive('changed', function (o) {
+  config.set(o.pref, o.value);
+  app.options.send('set', {
+    pref: o.pref,
+    value: config.get(o.pref)
+  });
+});
+app.options.receive('get', function (pref) {
+  app.options.send('set', {
+    pref: pref,
+    value: config.get(pref)
+  });
+});
+
 /* welcome page */
 app.startup(function () {
   var version = config.welcome.version;
@@ -35,6 +50,9 @@ app.panel.receive('loaded', app.inject.send.bind(this, 'loaded'));
 app.inject.receive('hashrequest', function () {
   app.inject.send.call(this, 'hashchange', app.storage.read('hash'));
 });
+app.inject.receive('width', () => app.inject.send('width', config.options.width, true));
+app.on('width', () => app.inject.send('width', config.options.width, true));
+
 
 /* context */
 app.context([

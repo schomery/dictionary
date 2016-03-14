@@ -74,8 +74,6 @@
 }
 .itanywhere-panel {
   position: absolute;
-  width: 270px;
-  height: 500px;
   z-index: 2147483647;
   border: solid 1px #bbbbbb;
   box-shadow: 2px 2px 10px #bbbbbb;

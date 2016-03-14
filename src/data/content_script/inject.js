@@ -1,6 +1,8 @@
 /* globals background */
 'use strict';
 
+var width = 500;
+
 // pointer
 var pointer = (function () {
   var div, timer;
@@ -73,6 +75,7 @@ var panel = (function () {
     load: function () {
       iframe = document.createElement('iframe');
       iframe.setAttribute('class', 'itanywhere-panel itanywhere-loading');
+      iframe.setAttribute('style', `width: ${width}px; height: 500px;`);
       iframe.setAttribute('src', 'about:blank');
       document.body.appendChild(iframe);
     },
@@ -94,6 +97,11 @@ var panel = (function () {
       if (iframe) {
         iframe.style.display = 'none';
         iframe.style.height = '300px';
+      }
+    },
+    width: function () {
+      if (iframe) {
+        iframe.style.width = `${width}px`;
       }
     }
   };
@@ -180,6 +188,12 @@ document.addEventListener('DOMContentLoaded', init, false);
 if (document.readyState !== 'loading') {
   init();
 }
+background.receive('width', w => {
+  width = w;
+  panel.width();
+});
+background.send('width');
+
 // detach
 background.receive('detach', function () {
   mouse.unload();

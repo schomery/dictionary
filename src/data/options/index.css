@@ -67,29 +67,35 @@ label>input {
 }
 
 body>* {
-  width: 800px;
   display: -webkit-flex;
   display: flex;
 }
 
 #header {
   width: 100%;
-  background: #F1F1F1 url(../icons/48.png) left 50px center no-repeat;
-  border-bottom: solid 1px #E5E5E5;
+  background: #F1F1F1 url(../icons/48.png) left 30px center no-repeat;
+  border-bottom: solid 5px #E5E5E5;
   height: 94px;
   justify-content: center;
   -webkit-justify-content: center;
+  overflow: hidden;
+}
+#header>div {
+  padding-left: 95px;
 }
 #header>div>span {
-  padding-left: 105px;
+  white-space: nowrap;
 }
 #header>div:nth-child(1)>span:nth-child(1) {
   font-size: 140%;
 }
 
-
 table {
   border-collapse: collapse;
+}
+#content {
+  width: calc(100% - 20px);
+  max-width: 800px;
 }
 #content>table>tbody>tr {
   border-bottom: solid 1px #E5E5E5;
@@ -101,4 +107,26 @@ table {
   width: 120px;
   font-weight: bold;
   vertical-align: top;
+}
+
+#toolbar {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+#toolbar a:first-child {
+  padding: 0 10px;
+}
+#toolbar a {
+  text-decoration: none;
+}
+@media screen and (max-width: 500px) {
+  #toolbar {
+    display: none;
+  }
+}
+@media screen and (max-height: 400px) {
+  #toolbar {
+    display: none;
+  }
 }
