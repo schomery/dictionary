@@ -4,19 +4,21 @@
   "description": "Dictionary Anywhere provides access to a floating multilingual Google Translate panel on any webpage.",
   "id": "jid0-fbHwsGfb6kJyq2hj65KnbGte3yT@jetpack",
   "license": "Mozilla Public License, version 2.0",
-  "version": "0.1.5b1",
+  "version": "0.1.6",
   "author": "Jeremy Schomery",
   "main": "./lib/common.js",
   "url": "http://add0n.com/dictionary.html",
   "permissions": {
     "private-browsing": true,
-    "cross-domain-content": ["http://translate.google.com/*", "https://translate.google.com/*", "https://translate.google.com/m/translate#auto/en/available"]
+    "cross-domain-content": [
+      "http://translate.google.*",
+      "https://translate.google.*"
+    ]
   },
   "preferences": [{
     "name": "openOptions",
-    "title": "Open Options",
-    "label": "Options",
-    "type": "control",
-    "value": "this is the default string value"
+    "title": "Open Options Page",
+    "label": "Open",
+    "type": "control"
   }]
 }

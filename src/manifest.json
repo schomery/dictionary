@@ -3,7 +3,7 @@
   "short_name": "idanywhere",
   "description": "Dictionary Anywhere provides access to a floating multilingual Google Translate panel on any webpage",
   "author": "Jeremy Schomery",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "manifest_version": 2,
   "permissions": [
     "storage",
@@ -23,14 +23,24 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "exclude_matches": ["http://translate.google.com/m/*", "https://translate.google.com/m/*"],
+      "exclude_matches": [
+        "http://translate.google.com/m/*",
+        "http://translate.google.cn/m/*",
+        "https://translate.google.com/m/*",
+        "https://translate.google.cn/m/*"
+      ],
       "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
       "css": ["data/content_script/inject.css"],
       "run_at": "document_start",
       "all_frames": true
     },
     {
-      "matches": ["https://translate.google.com/*", "http://translate.google.com/*"],
+      "matches": [
+        "https://translate.google.com/*",
+        "http://translate.google.com/*",
+        "https://translate.google.cn/*",
+        "http://translate.google.cn/*"
+      ],
       "js": ["data/panel/chrome/chrome.js", "data/panel/inject.js"],
       "css": ["data/panel/inject.css"],
       "run_at": "document_start",

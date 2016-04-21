@@ -191,7 +191,12 @@ chrome.webRequest.onHeadersReceived.addListener(
     return {responseHeaders: headers};
   },
   {
-    urls: ['https://translate.google.com/*', 'http://translate.google.com/*'],
+    urls: [
+      'https://translate.google.com/*',
+      'http://translate.google.com/*',
+      'https://translate.google.cn/*',
+      'http://translate.google.cn/*'
+    ],
     types: ['sub_frame']
   },
   ['blocking', 'responseHeaders']
@@ -203,8 +208,8 @@ chrome.webRequest.onHeadersReceived.addListener(
       var header = headers[i];
       if (header === 'Content-Security-Policy') {
         headers[i] = header
-          .replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 https://translate.google.com http://translate.google.com;')
-          .replace(/default\-src\s*'none\'\s*\;/, 'default-src translate.google.com;');
+          .replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 translate.google.com translate.google.cn;')
+          .replace(/default\-src\s*'none\'\s*\;/, 'default-src translate.google.*;');
       }
     }
     return {responseHeaders: headers};

@@ -10,6 +10,13 @@ else {
 }
 
 config.options = {
+  get engine () {
+    return +app.storage.read('engine') || 0;
+  },
+  set engine (val) {
+    app.storage.write('engine', val);
+    app.emit('engine', val);
+  },
   get width () {
     return +app.storage.read('width') || 400;
   },

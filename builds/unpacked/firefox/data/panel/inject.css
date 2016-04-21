@@ -11,3 +11,9 @@ div[class=gp-footer] {
 .dictionary {
   border-bottom-width: 0;
 }
+.gb_cd {
+  display: none;
+}
+.gt-lc-mobile {
+  box-shadow: none !important;
+}

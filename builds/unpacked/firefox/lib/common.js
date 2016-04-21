@@ -50,16 +50,21 @@ app.panel.receive('loaded', app.inject.send.bind(this, 'loaded'));
 app.inject.receive('hashrequest', function () {
   app.inject.send.call(this, 'hashchange', app.storage.read('hash'));
 });
-app.inject.receive('width', () => app.inject.send('width', config.options.width, true));
-app.on('width', () => app.inject.send('width', config.options.width, true));
-
+(function (callback) {
+  app.inject.receive('settings', callback);
+  app.on('width', callback);
+  app.on('engine', callback);
+})(() => app.inject.send('settings', {
+  width: config.options.width,
+  engine: config.options.engine
+}, true));
 
 /* context */
 app.context([
   {label: 'Translate Page (Google)', callback: function (url) {
     let langs = app.storage.read('hash') || '#auto/en';
     langs = langs.replace('#', '').split('/');
-    app.tab.open(`https://translate.google.com/translate?hl=en&sl=${langs[0]}&tl=${langs[1]}&u=${encodeURIComponent(url)}`);
+    app.tab.open(`https://translate.google.${config.options.engine === 1 ? 'cn' : 'com'}/translate?hl=en&sl=${langs[0]}&tl=${langs[1]}&u=${encodeURIComponent(url)}`);
   }},
   {label: 'Translate Page (Bing)', callback: function (url) {
     let langs = app.storage.read('hash') || '#auto/en';

@@ -32,7 +32,7 @@ exports.inject = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
     include: ['http://*', 'https://*', 'file:///*', 'about:reader?*'],
-    exclude: ['https://translate.google.com/m/*', 'http://translate.google.com/m/*'],
+    exclude: ['https://translate.google.*', 'http://translate.google.*'],
     contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
@@ -82,7 +82,7 @@ exports.inject = (function () {
 exports.panel = (function () {
   var workers = [], content_script_arr = [];
   pageMod.PageMod({
-    include: ['https://translate.google.com/*', 'http://translate.google.com/*'],
+    include: ['https://translate.google.*', 'http://translate.google.*'],
     contentScriptFile: [data.url('./panel/firefox/firefox.js'), data.url('./panel/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./panel/inject.css'),
@@ -241,18 +241,18 @@ exports.startup = function (callback) {
 var httpResponseObserver = {
   observe: function (subject) {
     var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
-    // make sure translate.google.com is in 'Content-Security-Policy'
+    // make sure translate.google.* is in 'Content-Security-Policy'
     var csp;
     try {
       csp = httpChannel.getResponseHeader('Content-Security-Policy');
     } catch (e) {}
     if (csp) {
-      csp = csp.replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 https://translate.google.com http://translate.google.com;');
-      csp = csp.replace(/default\-src\s*'none\'\s*\;/, 'default-src translate.google.com;');
+      csp = csp.replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 translate.google.com translate.google.cn;');
+      csp = csp.replace(/default\-src\s*'none\'\s*\;/, 'default-src translate.google.*;');
       httpChannel.setResponseHeader('Content-Security-Policy', csp, false);
     }
-    // allow translate.google.com to be loaded on iframe
-    if (httpChannel.URI.host === 'translate.google.com') {
+    // allow translate.google.* to be loaded on iframe
+    if (httpChannel.URI.host.indexOf('translate.google.') === 0) {
       httpChannel.setResponseHeader('X-Frame-Options', '', false);
       httpChannel.setResponseHeader('frame-options', '', false);
     }

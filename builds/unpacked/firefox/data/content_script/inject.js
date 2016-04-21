@@ -1,7 +1,10 @@
 /* globals background */
 'use strict';
 
-var width = 500;
+var config = {
+  engine: 'https://translate.google.com/',
+  width: 500
+};
 
 // pointer
 var pointer = (function () {
@@ -44,8 +47,8 @@ var pointer = (function () {
         div.style.display = 'none';
       }
     },
-    is: function (elem) {
-      return elem === div;
+    is: function (e) {
+      return e.target === div;
     }
   };
 })();
@@ -55,7 +58,7 @@ var panel = (function () {
   background.receive('hashchange', function (hash) {
     panel.hash = hash || panel.hash;
     if (iframe) {
-      iframe.src = 'https://translate.google.com/m/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
+      iframe.src = config.engine + 'm/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
     }
   });
   background.receive('resize', function (height) {
@@ -75,7 +78,7 @@ var panel = (function () {
     load: function () {
       iframe = document.createElement('iframe');
       iframe.setAttribute('class', 'itanywhere-panel itanywhere-loading');
-      iframe.setAttribute('style', `width: ${width}px; height: 500px;`);
+      iframe.setAttribute('style', `width: ${config.width}px; height: 500px;`);
       iframe.setAttribute('src', 'about:blank');
       document.body.appendChild(iframe);
     },
@@ -88,10 +91,19 @@ var panel = (function () {
       if (!iframe) {
         panel.load();
       }
-      iframe.style.left = (e.clientX + window.scrollX) + 'px';
+      var left = e.clientX + window.scrollX;
+      if (left + config.width > window.scrollX + window.innerWidth) {
+        left = window.scrollX + window.innerWidth - config.width - 30;
+        left = Math.max(left, 0);
+      }
+      iframe.style.left = left + 'px';
       iframe.style.top = (e.clientY + window.scrollY) + 'px';
       iframe.style.display = 'block';
-      iframe.src = 'https://translate.google.com/m/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
+      iframe.src = config.engine + 'm/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase.substr(0, 2000));
+      /*iframe.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth'
+      });*/
     },
     hide: function () {
       if (iframe) {
@@ -101,7 +113,7 @@ var panel = (function () {
     },
     width: function () {
       if (iframe) {
-        iframe.style.width = `${width}px`;
+        iframe.style.width = `${config.width}px`;
       }
     }
   };
@@ -143,7 +155,7 @@ var mouse = (function () {
         else {
           pointer.hide();
         }
-        if (!pointer.is(e.target)) {
+        if (!pointer.is(e)) {
           postMessage('idanywhere-hide', '*');
         }
       }, 100);
@@ -188,11 +200,12 @@ document.addEventListener('DOMContentLoaded', init, false);
 if (document.readyState !== 'loading') {
   init();
 }
-background.receive('width', w => {
-  width = w;
+background.receive('settings', obj => {
+  config.width = obj.width;
+  config.engine = obj.engine === 0 ? 'https://translate.google.com/' : 'https://translate.google.cn/';
   panel.width();
 });
-background.send('width');
+background.send('settings');
 
 // detach
 background.receive('detach', function () {
