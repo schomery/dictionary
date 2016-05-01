@@ -119,6 +119,8 @@ table {
 }
 #toolbar a {
   text-decoration: none;
+  color: red;
+  font-weight: bold;
 }
 @media screen and (max-width: 500px) {
   #toolbar {

@@ -176,7 +176,10 @@ exports.timer = timers;
 exports.options = (function () {
   var workers = [], options_arr = [];
   pageMod.PageMod({
-    include: data.url('options/index.html'),
+    include: [
+      data.url('options/index.html'),
+      'chrome://idanywhere/content/data/options/index.html'
+    ],
     contentScriptFile: [data.url('options/firefox/firefox.js'), data.url('options/index.js')],
     contentScriptWhen: 'ready',
     contentScriptOptions: {
@@ -192,7 +195,6 @@ exports.options = (function () {
       });
       worker.on('detach', function() {
         array.remove(workers, this);
-        this.tab.close();
       });
 
       options_arr.forEach(function (arr) {
@@ -201,7 +203,7 @@ exports.options = (function () {
     }
   });
   sp.on('openOptions', function() {
-    exports.tab.open(data.url('options/index.html'));
+    exports.tab.open('chrome://idanywhere/content/data/options/index.html');
   });
 
   return {

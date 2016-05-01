@@ -11,6 +11,7 @@ div[class=gp-footer] {
 .dictionary {
   border-bottom-width: 0;
 }
+.gb_bd,
 .gb_cd {
   display: none;
 }

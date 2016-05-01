@@ -1,15 +1,13 @@
 /* globals self */
 'use strict';
 
-var background = {
-  send: function (id, data) {
-    self.port.emit(id, data);
-  },
-  receive: function (id, callback) {
-    self.port.on(id, callback);
-  }
+var background = { // jshint ignore:line
+  send: self.port.emit,
+  receive: self.port.on
 };
 
-var manifest = {
+var manifest = { // jshint ignore:line
   url: self.options.base
 };
+
+self.port.on('detach', () => window.close());
