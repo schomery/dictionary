@@ -17,3 +17,6 @@ div[class=gp-footer] {
 .gt-lc-mobile {
   box-shadow: none !important;
 }
+.share-panel {
+  display: none;
+}

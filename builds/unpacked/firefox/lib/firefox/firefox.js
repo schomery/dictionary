@@ -184,9 +184,16 @@ exports.options = (function () {
     },
     onAttach: function(worker) {
       array.add(workers, worker);
-      worker.on('pageshow', function() { array.add(workers, this); });
-      worker.on('pagehide', function() { array.remove(workers, this); });
-      worker.on('detach', function() { array.remove(workers, this); });
+      worker.on('pageshow', function() {
+        array.add(workers, this);
+      });
+      worker.on('pagehide', function() {
+        array.remove(workers, this);
+      });
+      worker.on('detach', function() {
+        array.remove(workers, this);
+        this.tab.close();
+      });
 
       options_arr.forEach(function (arr) {
         worker.port.on(arr[0], arr[1]);
@@ -195,15 +202,6 @@ exports.options = (function () {
   });
   sp.on('openOptions', function() {
     exports.tab.open(data.url('options/index.html'));
-  });
-  unload.when(function () {
-    exports.tab.list().then(function (tabs) {
-      tabs.forEach(function (tab) {
-        if (tab.url === data.url('options/index.html')) {
-          tab.close();
-        }
-      });
-    });
   });
 
   return {

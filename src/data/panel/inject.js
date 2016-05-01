@@ -4,7 +4,7 @@
 var id;
 
 function resize () {
-  let page = document.body;
+  let page =  document.body || document.documentElement;
   let tmp = window.getComputedStyle(page);
   if (page && tmp) {
     background.send('resize', tmp.height);
@@ -26,5 +26,9 @@ if (window.top !== window) {  // only in frames
   document.addEventListener('DOMContentLoaded', function () {
     // Remove loading animation
     background.send('loaded');
+    // preventing panel from prompting alert or confirm
+    let script = document.createElement('script');
+    script.textContent = 'window.alert = window.confirm = function () {return true;}';
+    document.body.appendChild(script);
   });
 }
