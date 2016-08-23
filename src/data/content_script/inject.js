@@ -1,10 +1,45 @@
 /* globals background */
 'use strict';
 
-var config = {
-  engine: 'https://translate.google.com/',
-  width: 500
+// http://www.w3schools.com/html/exercise.asp?filename=exercise_iframe2
+
+var post = {
+  hide: () => window.top.postMessage({
+    cmd: 'idanywhere-hide'
+  }, '*'),
+  show: (e) => window.parent.postMessage({
+    cmd: 'idanywhere-show',
+    event: {
+      clientX: e.clientX,
+      clientY: e.clientY
+    }
+  }, '*'),
+  phrase: (p) => window.top.postMessage({
+    cmd: 'idanywhere-phrase',
+    phrase: p
+  }, '*')
 };
+
+window.addEventListener('message', e => {
+  if (e.data && e.data.cmd === 'idanywhere-show') {
+    if (e.source !== e.target) {
+      let ev = {
+        cmd: 'idanywhere-show',
+        event: {
+          clientX: e.data.event.clientX,
+          clientY: e.data.event.clientY
+        }
+      };
+      let iframes = Array.from(document.querySelectorAll('iframe'));
+      let index = iframes.map(f => f.contentWindow).indexOf(e.source);
+      if (index !== -1) {
+        ev.event.clientX += iframes[index].offsetLeft - window.scrollX;
+        ev.event.clientY += iframes[index].offsetTop - window.scrollY;
+        window.parent.postMessage(ev, '*');
+      }
+    }
+  }
+}, false);
 
 // pointer
 var pointer = (function () {
@@ -17,7 +52,7 @@ var pointer = (function () {
       div.addEventListener('animationend', function () {
         div.classList.remove('bounceIn');
       });
-      div.addEventListener('click', panel.show, false);
+      div.addEventListener('click', post.show, false);
       document.body.appendChild(div);
     },
     unload: function () {
@@ -52,83 +87,9 @@ var pointer = (function () {
     }
   };
 })();
-// panel
-var panel = (function () {
-  var iframe;
-  background.receive('hashchange', function (hash) {
-    panel.hash = hash || panel.hash;
-    if (iframe) {
-      iframe.src = config.engine + 'm/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase);
-    }
-  });
-  background.receive('resize', function (height) {
-    if (iframe) {
-      iframe.style.height = height;
-    }
-  });
-  background.receive('loaded', function () {
-    if (iframe) {
-      iframe.classList.remove('itanywhere-loading');
-    }
-  });
-  background.send('hashrequest');
-  return {
-    phrase: null,
-    hash: '#auto/en',
-    load: function () {
-      iframe = document.createElement('iframe');
-      iframe.setAttribute('class', 'itanywhere-panel itanywhere-loading');
-      iframe.setAttribute('style', `width: ${config.width}px; height: 500px;`);
-      iframe.setAttribute('src', 'about:blank');
-      document.body.appendChild(iframe);
-    },
-    unload: function () {
-      if (iframe && iframe.parentNode) {
-        iframe.parentNode.removeChild(iframe);
-      }
-    },
-    show: function (e) {
-      if (!iframe) {
-        panel.load();
-      }
-      var left = e.clientX + window.scrollX;
-      if (left + config.width > window.scrollX + window.innerWidth) {
-        left = window.scrollX + window.innerWidth - config.width - 30;
-        left = Math.max(left, 0);
-      }
-      iframe.style.left = left + 'px';
-      iframe.style.top = (e.clientY + window.scrollY) + 'px';
-      iframe.style.display = 'block';
-      iframe.src = config.engine + 'm/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase.substr(0, 2000));
-      /*iframe.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth'
-      });*/
-    },
-    hide: function () {
-      if (iframe) {
-        iframe.style.display = 'none';
-        iframe.style.height = '300px';
-      }
-    },
-    width: function () {
-      if (iframe) {
-        iframe.style.width = `${config.width}px`;
-      }
-    }
-  };
-})();
+
 // mouse
 var mouse = (function () {
-  function postMessage (msg, reg) {
-    window.postMessage(msg, reg);
-    parent.postMessage(msg, reg);
-    [].forEach.call(document.querySelectorAll('iframe'), function (iframe) {
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(msg, reg);
-      }
-    });
-  }
   function getSelection (e) {
     var selection = window.getSelection();
     var tmp = selection.toString();
@@ -136,49 +97,42 @@ var mouse = (function () {
       return tmp.trim();
     }
     var target = e.target;
-    if (target.value && !isNaN(target.selectionStart) && !isNaN(target.selectionEnd)) {
-      return target.value.substring(target.selectionStart, target.selectionEnd).trim();
+    try { // input type button does not support selection
+      if (target.value && !isNaN(target.selectionStart) && !isNaN(target.selectionEnd)) {
+        return target.value.substring(target.selectionStart, target.selectionEnd).trim();
+      }
     }
+    catch (e) {}
   }
   var click = (function () {
     var id;
     return function (e) {
-      if (id) {
-        window.clearTimeout(id);
-      }
+      window.clearTimeout(id);
       id = window.setTimeout(function () {
         var selected = getSelection(e);
         if (selected) {
           pointer.move(e.clientX + window.scrollX + 3, e.clientY + window.scrollY - 40);
-          panel.phrase = selected;
+          post.phrase(selected);
         }
         else {
           pointer.hide();
         }
         if (!pointer.is(e)) {
-          postMessage('idanywhere-hide', '*');
+          post.hide();
         }
       }, 100);
     };
   })();
 
-  function message (e) {
-    if (e.data === 'idanywhere-hide') {
-      panel.hide();
-    }
-  }
-
   return {
     load: function () {
       document.addEventListener('mouseup', click, false);
       document.addEventListener('keyup', click, false);
-      window.addEventListener('message', message, false);
     },
     unload: function () {
       try {
         document.removeEventListener('mouseup', click);
         document.removeEventListener('keyup', click);
-        window.removeEventListener('message', message);
       }
       catch (e) {}
     }
@@ -200,16 +154,9 @@ document.addEventListener('DOMContentLoaded', init, false);
 if (document.readyState !== 'loading') {
   init();
 }
-background.receive('settings', obj => {
-  config.width = obj.width;
-  config.engine = obj.engine === 0 ? 'https://translate.google.com/' : 'https://translate.google.cn/';
-  panel.width();
-});
-background.send('settings');
 
 // detach
 background.receive('detach', function () {
   mouse.unload();
-  panel.unload();
   pointer.unload();
 });

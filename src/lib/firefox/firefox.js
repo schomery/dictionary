@@ -30,16 +30,11 @@ exports.removeListener = function removeListener (type, listener) {
 
 exports.inject = (function () {
   var workers = [], content_script_arr = [];
-  pageMod.PageMod({
+  var options = {
     include: ['http://*', 'https://*', 'file:///*', 'about:reader?*'],
     exclude: ['https://translate.google.*', 'http://translate.google.*'],
-    contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
-    attachTo: ['top', 'frame', 'existing'],
-    contentScriptOptions: {
-      hash: prefs.hash || '#auto/en'
-    },
     onAttach: function(worker) {
       array.add(workers, worker);
       worker.on('pageshow', function() { array.add(workers, this); });
@@ -50,7 +45,18 @@ exports.inject = (function () {
         worker.port.on(arr[0], arr[1]);
       });
     }
-  });
+  };
+  pageMod.PageMod(Object.assign(options, {
+    contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/inject.js')],
+    attachTo: ['top', 'frame', 'existing']
+  }));
+  pageMod.PageMod(Object.assign(options, {
+    contentScriptFile: [data.url('./content_script/firefox/firefox.js'), data.url('./content_script/top.js')],
+    attachTo: ['top', 'existing'],
+    contentScriptOptions: {
+      hash: prefs.hash || '#auto/en'
+    },
+  }));
   return {
     send: function (id, data, global) {
       if (global === true) {
