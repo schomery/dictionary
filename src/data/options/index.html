@@ -20,9 +20,23 @@
       <tr>
         <td>Translator</td>
         <td>
-          <span>Translator's Width (in px):</span>
+          <span>Translator's width (in px):</span>
           <input data-pref="options.width" type="number" min="200" max="600">
           <p class="note">This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</p>
+          <p class="spacer"></p>
+          <span>Offset in x direction for translator's bubble (in px):</span>
+          <input data-pref="options.offset.x" type="number">
+          <p class="note">Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</p>
+          <p class="spacer"></p>
+          <span>Offset in y direction for translator's bubble (in px):</span>
+          <input data-pref="options.offset.y" type="number">
+          <p class="note">Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</p>
+          <!--
+          <p class="spacer"></p>
+          <span>Translator's maximum height (in px):</span>
+          <input data-pref="options.mheight" type="number">
+          <p class="note">This option defines the maximum height of the injected translator. Use 0 to disable height truncation.</p>
+          -->
           <!--
           <p class="spacer"></p>
           <label>
@@ -38,6 +52,11 @@
               <option value="1">translate.google.cn</option>
             </select>
           </div>
+          <p class="spacer"></p>
+          <label>
+            <span>Force script injection (Firefox only):</span> <input type="checkbox" data-pref="options.forced">
+          </label>
+          <p class="note">Some websites like github.com prevent script injection from add-ons by applying Content Security Policy. By setting this option, Content Security Policy will be overwritten. Page refresh is required for this change to take place.</p>
         </td>
       </tr>
       <tr>

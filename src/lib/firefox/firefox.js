@@ -254,7 +254,12 @@ var httpResponseObserver = {
     } catch (e) {}
     if (csp) {
       csp = csp.replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 translate.google.com translate.google.cn;');
-      csp = csp.replace(/default\-src\s*'none\'\s*\;/, 'default-src translate.google.*;');
+      /* temporary solution */
+      if (sp.prefs.forced) {
+        csp = csp.replace(/script\-src\s*([^\;]*);/, '');
+        csp = csp.replace(/default\-src\s*([^\;]*);/, '');
+      }
+
       httpChannel.setResponseHeader('Content-Security-Policy', csp, false);
     }
     // allow translate.google.* to be loaded on iframe

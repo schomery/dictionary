@@ -1,6 +1,8 @@
 'use strict';
 
 var isFirefox = typeof require !== 'undefined', config;
+var isOpera = !isFirefox && navigator.userAgent.indexOf('OPR') !== -1;
+
 if (isFirefox) {
   var app = require('./firefox/firefox');
   config = exports;
@@ -31,11 +33,43 @@ config.options = {
     app.storage.write('width', val);
     app.emit('width', val);
   },
+  offset: {
+    get x () {
+      return +app.storage.read('offset-x') || (isOpera ? 10 : 0);
+    },
+    set x (val) {
+      val = +val;
+      app.storage.write('offset-x', val);
+      app.emit('offset');
+    },
+    get y () {
+      return +app.storage.read('offset-y') || (isOpera ? 20 : 0);
+    },
+    set y (val) {
+      val = +val;
+      app.storage.write('offset-y', val);
+      app.emit('offset');
+    }
+  },
+  get mheight () {
+    return +app.storage.read('mheight') || 0;
+  },
+  set mheight (val) {
+    val = +val;
+    app.storage.write('mheight', val);
+    app.emit('mheight', val);
+  },
   get fixed () {
     return app.storage.read('fixed') === 'true' ? true : false;
   },
   set fixed (val) {
     app.storage.write('fixed', val);
+  },
+  get forced () {
+    return app.storage.read('forced') === 'false' ? false : true;
+  },
+  set forced (val) {
+    app.storage.write('forced', val);
   }
 };
 

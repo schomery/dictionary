@@ -47,15 +47,26 @@ app.panel.receive('hashchange', function (hash) {
 });
 app.panel.receive('resize', app.inject.send.bind(this, 'resize'));
 app.panel.receive('loaded', app.inject.send.bind(this, 'loaded'));
+
+app.inject.receive('offset', function () {
+  app.inject.send.call(this, 'offset', config.options.offset);
+});
+app.on('offset', function () {
+  app.inject.send('offset', config.options.offset);
+});
+
 app.inject.receive('hashrequest', function () {
   app.inject.send.call(this, 'hashchange', app.storage.read('hash'));
 });
+app.inject.receive('open', app.tab.open);
 (function (callback) {
   app.inject.receive('settings', callback);
   app.on('width', callback);
+  app.on('mheight', callback);
   app.on('engine', callback);
 })(() => app.inject.send('settings', {
   width: config.options.width,
+  mheight: config.options.mheight,
   engine: config.options.engine
 }, true));
 

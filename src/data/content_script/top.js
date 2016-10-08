@@ -3,7 +3,8 @@
 
 var config = {
   engine: 'https://translate.google.com/',
-  width: 500
+  width: 500,
+  mheight: 0
 };
 
 // panel
@@ -16,6 +17,9 @@ var panel = (function () {
     }
   });
   background.receive('resize', function (height) {
+    if (config.mheight) {
+      height = Math.max(height, config.mheight);
+    }
     if (iframe) {
       iframe.style.height = height;
     }
@@ -80,7 +84,12 @@ var panel = (function () {
 
 (function (message) {
   window.addEventListener('message', message, false);
-  background.receive('detach', () => window.removeEventListener('message', message));
+  background.receive('detach', () => {
+    try {
+      window.removeEventListener('message', message);
+    }
+    catch (e) {}
+  });
 })(function (e) {
   if (e.data) {
     if (e.data.cmd === 'idanywhere-hide') {
@@ -92,11 +101,18 @@ var panel = (function () {
     else if (e.data.cmd === 'idanywhere-phrase') {
       panel.phrase = e.data.phrase;
     }
+    else if (e.data.cmd === 'idanywhere-open-translate') {
+      background.send('open', config.engine + '/translate' + panel.hash + '/' + encodeURIComponent(panel.phrase));
+    }
+    else if (e.data.cmd === 'idanywhere-open-define') {
+      background.send('open', 'https://www.google.com/search?q=define ' + encodeURIComponent(panel.phrase));
+    }
   }
 });
 
 background.receive('settings', obj => {
   config.width = obj.width;
+  config.mheight = obj.mheight;
   config.engine = obj.engine === 0 ? 'https://translate.google.com/' : 'https://translate.google.cn/';
   panel.width();
 });

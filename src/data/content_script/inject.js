@@ -2,7 +2,6 @@
 'use strict';
 
 // http://www.w3schools.com/html/exercise.asp?filename=exercise_iframe2
-
 var post = {
   hide: () => window.top.postMessage({
     cmd: 'idanywhere-hide'
@@ -43,6 +42,10 @@ window.addEventListener('message', e => {
 
 // pointer
 var pointer = (function () {
+  var offset = {
+    x: 0,
+    y: 0
+  };
   var div, timer;
   return {
     load: function () {
@@ -67,6 +70,8 @@ var pointer = (function () {
       if (!div) {
         pointer.load();
       }
+      left += offset.x;
+      top += offset.y;
       div.style.left = Math.max(left, 0) + 'px';
       div.style.top = Math.max(top, 0) + 'px';
       div.style.display = 'block';
@@ -84,6 +89,10 @@ var pointer = (function () {
     },
     is: function (e) {
       return e.target === div;
+    },
+    config: (obj) => {
+      offset.x = obj.x;
+      offset.y = obj.y;
     }
   };
 })();
@@ -154,6 +163,8 @@ document.addEventListener('DOMContentLoaded', init, false);
 if (document.readyState !== 'loading') {
   init();
 }
+background.receive('offset', pointer.config);
+background.send('offset');
 
 // detach
 background.receive('detach', function () {

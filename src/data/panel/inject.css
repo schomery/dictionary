@@ -21,3 +21,21 @@ div[class=gp-footer] {
 .share-panel {
   display: none;
 }
+.itanywhere-link {
+  display: flex;
+  font-size: 12px;
+  justify-content: flex-end;
+  padding: 5px;
+}
+.itanywhere-link>* {
+  padding-left: 5px;
+}
+.itanywhere-link a {
+  text-decoration: none;
+}
+.itanywhere-link a:link ,
+.itanywhere-link a:visited,
+.itanywhere-link a:hover,
+.itanywhere-link a:active {
+  color: #000;
+}

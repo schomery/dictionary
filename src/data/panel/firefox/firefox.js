@@ -6,7 +6,12 @@ var background = {
     self.port.emit(id, data);
   },
   receive: function (id, callback) {
-    self.port.on(id, callback);
+    if (id === 'detach') {
+      self.port.on('detach', callback);
+    }
+    else {
+      self.port.on(id, callback);
+    }
   }
 };
 
