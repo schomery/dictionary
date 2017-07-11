@@ -68,7 +68,7 @@
   background-color: rgba(0, 0, 255, 0.2);
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url('../icons/activator.png'), url('moz-extension://__MSG_@@extension_id__/data/icons/activator.png'), url('chrome-extension://__MSG_@@extension_id__/data/icons/activator.png');
+  background-image: url('chrome-extension://__MSG_@@extension_id__/data/icons/activator.png');
   cursor: pointer;
   display: none;
 }
@@ -83,5 +83,14 @@
   display: none;
 }
 .itanywhere-loading {
-  background-image: url('../icons/loading.gif'), url('moz-extension://__MSG_@@extension_id__/data/icons/loading.gif'), url('chrome-extension://__MSG_@@extension_id__/data/icons/loading.gif');
+  background-image: url('chrome-extension://__MSG_@@extension_id__/data/icons/loading.gif');
+}
+
+@-moz-document url-prefix() {
+  .itanywhere-activator {
+    background-image: url('moz-extension://__MSG_@@extension_id__/data/icons/activator.png');
+  }
+  .itanywhere-loading {
+    background-image: url('moz-extension://__MSG_@@extension_id__/data/icons/loading.gif');
+  }
 }
