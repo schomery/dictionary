@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Options Page :: Dictionary Anywhere</title>
+  <style>
+    body {
+      padding: 10px;
+      font-family: arial, sans-serif;
+      font-size: 13px;
+    }
+    label {
+      display: block;
+      padding: 3px 0;
+    }
+    input[type=number] {
+      width: 60px;
+      outline: none;
+    }
+    label p {
+      font-size: 80%;
+      color: #bfbfbf;
+      margin: 5px 10px;
+    }
+    textarea {
+      margin-top: 5px;
+      width: 100%;
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <label>
+    Translator's width (in px):
+    <input id="width" type="number">
+    <p>This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</p>
+  </label>
+  <label>
+    Offset in x direction for translator's bubble (in px):
+    <input id="offset-x" type="number">
+    <p>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</p>
+  </label>
+  <label>
+    Offset in y direction for translator's bubble (in px):
+    <input id="offset-y" type="number">
+    <p>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</p>
+  </label>
+  <p>
+    <label>Translator's Engine:
+    <select id="engine">
+      <option value="0">translate.google.com</option>
+      <option value="1">translate.google.cn</option>
+    </select></label>
+  </p>
+  <label>
+    <input id="show" type="checkbox">
+    Open FAQs page on upgrade
+    <p>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</p>
+  </label>
+  <p>
+    <button id="save">Save</button><span id="status"></span>
+  </p>
+
+  <script src="index.js"></script>
+</body>
+</html>

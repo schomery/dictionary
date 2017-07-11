@@ -1,0 +1,41 @@
+body {
+  overflow: hidden;
+  background-color: transparent !important;
+}
+div[class=gp-footer] {
+  display: none;
+}
+.result-dict-wrapper {
+  box-shadow: none;
+}
+.dictionary {
+  border-bottom-width: 0;
+}
+.gb_bd,
+.gb_cd {
+  display: none;
+}
+.gt-lc-mobile {
+  box-shadow: none !important;
+}
+.share-panel {
+  display: none;
+}
+.itanywhere-link {
+  display: flex;
+  font-size: 12px;
+  justify-content: flex-end;
+  padding: 5px;
+}
+.itanywhere-link>* {
+  padding-left: 5px;
+}
+.itanywhere-link a {
+  text-decoration: none;
+}
+.itanywhere-link a:link ,
+.itanywhere-link a:visited,
+.itanywhere-link a:hover,
+.itanywhere-link a:active {
+  color: #000;
+}

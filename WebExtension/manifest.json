@@ -3,7 +3,7 @@
   "short_name": "idanywhere",
   "description": "Access to a floating multilingual Google™ Translate panel on any webpage",
   "author": "Jeremy Schomery",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "manifest_version": 2,
   "permissions": [
     "storage",
@@ -18,7 +18,9 @@
     "data/icons/loading.gif"
   ],
   "background": {
-    "page": "lib/chrome/background.html"
+    "scripts": [
+      "common.js"
+    ]
   },
   "content_scripts": [
     {
@@ -29,8 +31,8 @@
         "https://translate.google.com/m/*",
         "https://translate.google.cn/m/*"
       ],
-      "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
-      "css": ["data/content_script/inject.css"],
+      "js": ["data/inject/inject.js"],
+      "css": ["data/inject/inject.css"],
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true
@@ -43,8 +45,7 @@
         "https://translate.google.com/m/*",
         "https://translate.google.cn/m/*"
       ],
-      "js": ["data/content_script/chrome/chrome.js", "data/content_script/top.js"],
-      "css": ["data/content_script/inject.css"],
+      "js": ["data/inject/top.js"],
       "run_at": "document_start",
       "all_frames": false
     },
@@ -55,17 +56,26 @@
         "https://translate.google.cn/*",
         "http://translate.google.cn/*"
       ],
-      "js": ["data/panel/chrome/chrome.js", "data/panel/inject.js"],
+      "js": ["data/panel/inject.js"],
       "css": ["data/panel/inject.css"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
-  "options_page": "data/options/index.html",
+  "options_ui": {
+    "page": "data/options/index.html",
+    "chrome_style": true
+  },
   "homepage_url": "http://add0n.com/dictionary.html",
   "icons": {
     "16": "data/icons/16.png",
     "48": "data/icons/48.png",
     "128": "data/icons/128.png"
+  },
+  "applications": {
+    "gecko": {
+      "id": "jid0-fbHwsGfb6kJyq2hj65KnbGte3yT@jetpack",
+      "strict_min_version": "53.0"
+    }
   }
 }

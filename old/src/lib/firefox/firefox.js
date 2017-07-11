@@ -9,41 +9,29 @@ var self          = require('sdk/self'),
     tabs          = require('sdk/tabs'),
     timers        = require('sdk/timers'),
     cm            = require('sdk/context-menu'),
-    loader        = require('@loader/options'),
     array         = require('sdk/util/array'),
     unload        = require('sdk/system/unload'),
-    {on, off, once, emit} = require('sdk/event/core'),
-    {Cc, Ci, Cu}  = require('chrome');
-
-Cu.import('resource://gre/modules/Promise.jsm');
-
-// Promise
-exports.Promise = Promise;
+    {on, emit}    = require('sdk/event/core'),
+    {Cc, Ci}      = require('chrome');
 
 // Event Emitter
 exports.on = on.bind(null, exports);
-exports.once = once.bind(null, exports);
 exports.emit = emit.bind(null, exports);
-exports.removeListener = function removeListener (type, listener) {
-  off(exports, type, listener);
-};
 
 exports.inject = (function () {
-  var workers = [], content_script_arr = [];
-  var options = {
+  let workers = [], callbacks = [];
+  let options = {
     include: ['http://*', 'https://*', 'file:///*', 'about:reader?*'],
-    exclude: ['https://translate.google.*', 'http://translate.google.*'],
+    exclude: ['http://translate.google.*', 'https://translate.google.*'],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./content_script/inject.css'),
-    onAttach: function(worker) {
+    onAttach: function (worker) {
       array.add(workers, worker);
-      worker.on('pageshow', function() { array.add(workers, this); });
-      worker.on('pagehide', function() { array.remove(workers, this); });
-      worker.on('detach', function() { array.remove(workers, this); });
+      worker.on('pageshow', function () { array.add(workers, this); });
+      worker.on('pagehide', function () { array.remove(workers, this); });
+      worker.on('detach', function () { array.remove(workers, this); });
 
-      content_script_arr.forEach(function (arr) {
-        worker.port.on(arr[0], arr[1]);
-      });
+      callbacks.forEach((arr) => worker.port.on(arr[0], arr[1]));
     }
   };
   pageMod.PageMod(Object.assign(options, {
@@ -77,33 +65,32 @@ exports.inject = (function () {
       }
     },
     receive: function (id, callback) {
-      content_script_arr.push([id, callback]);
-      workers.forEach(function (worker) {
-        worker.port.on(id, callback);
-      });
+      callbacks.push([id, callback]);
+      workers.forEach(worker => worker.port.on(id, callback));
     }
   };
 })();
 
 exports.panel = (function () {
-  var workers = [], content_script_arr = [];
+  let workers = [], callbacks = [];
   pageMod.PageMod({
-    include: ['https://translate.google.*', 'http://translate.google.*'],
-    contentScriptFile: [data.url('./panel/firefox/firefox.js'), data.url('./panel/inject.js')],
+    include: ['http://translate.google.*', 'https://translate.google.*'],
+    contentScriptFile: [
+      data.url('./panel/firefox/firefox.js'),
+      data.url('./panel/inject.js')
+    ],
     contentScriptWhen: 'start',
     contentStyleFile : data.url('./panel/inject.css'),
     attachTo: ['frame'],
     contentScriptOptions: {
       base: data.url('.')
     },
-    onAttach: function(worker) {
+    onAttach: function (worker) {
       array.add(workers, worker);
-      worker.on('pageshow', function() { array.add(workers, this); });
-      worker.on('pagehide', function() { array.remove(workers, this); });
-      worker.on('detach', function() { array.remove(workers, this); });
-      content_script_arr.forEach(function (arr) {
-        worker.port.on(arr[0], arr[1]);
-      });
+      worker.on('pageshow', function () { array.add(workers, this); });
+      worker.on('pagehide', function () { array.remove(workers, this); });
+      worker.on('detach', function () { array.remove(workers, this); });
+      callbacks.forEach((arr) => worker.port.on(arr[0], arr[1]));
     }
   });
   return {
@@ -126,7 +113,7 @@ exports.panel = (function () {
       }
     },
     receive: function (id, callback) {
-      content_script_arr.push([id, callback]);
+      callbacks.push([id, callback]);
       workers.forEach(function (worker) {
         worker.port.on(id, callback);
       });
@@ -135,95 +122,26 @@ exports.panel = (function () {
 })();
 
 exports.storage = {
-  read: function (id) {
-    return (prefs[id] || prefs[id] + '' === 'false' || !isNaN(prefs[id])) ? (prefs[id] + '') : null;
-  },
-  write: function (id, data) {
-    data = data + '';
-    if (data === 'true' || data === 'false') {
-      prefs[id] = data === 'true' ? true : false;
-    }
-    else if (parseInt(data) + '' === data) {
-      prefs[id] = parseInt(data);
-    }
-    else {
-      prefs[id] = data + '';
-    }
-  }
+  read: (id) =>  prefs[id],
+  write: (id, data) => prefs[id] = data
 };
+sp.on('engine', () => exports.emit('engine', sp.prefs.engine));
+sp.on('width', () => {
+  timers.setTimeout(() => {
+    sp.prefs.width = Math.min(Math.max(200, sp.prefs.width), 600);
+    exports.emit('width', sp.prefs.width);
+  }, 2000);
+});
+sp.on('mheight', () => exports.emit('mheight', sp.prefs.mheight));
+sp.on('offset-x', () => exports.emit('offset'));
+sp.on('offset-y', () => exports.emit('offset'));
 
 exports.tab = {
-  open: function (url, inBackground, inCurrent) {
-    if (inCurrent) {
-      tabs.activeTab.url = url;
-    }
-    else {
-      tabs.open({
-        url: url,
-        inBackground: typeof inBackground === 'undefined' ? false : inBackground
-      });
-    }
-  },
-  list: function () {
-    var temp = [];
-    for each (var tab in tabs) {
-      temp.push(tab);
-    }
-    return Promise.resolve(temp);
-  }
+  open: (url) => tabs.open({url})
 };
 
-exports.version = function () {
-  return self.version;
-};
-
+exports.version = () => self.version;
 exports.timer = timers;
-
-exports.options = (function () {
-  var workers = [], options_arr = [];
-  pageMod.PageMod({
-    include: [
-      data.url('options/index.html'),
-      'chrome://idanywhere/content/data/options/index.html'
-    ],
-    contentScriptFile: [data.url('options/firefox/firefox.js'), data.url('options/index.js')],
-    contentScriptWhen: 'ready',
-    contentScriptOptions: {
-      base: loader.prefixURI + loader.name + '/'
-    },
-    onAttach: function(worker) {
-      array.add(workers, worker);
-      worker.on('pageshow', function() {
-        array.add(workers, this);
-      });
-      worker.on('pagehide', function() {
-        array.remove(workers, this);
-      });
-      worker.on('detach', function() {
-        array.remove(workers, this);
-      });
-
-      options_arr.forEach(function (arr) {
-        worker.port.on(arr[0], arr[1]);
-      });
-    }
-  });
-  sp.on('openOptions', function() {
-    exports.tab.open('chrome://idanywhere/content/data/options/index.html');
-  });
-
-  return {
-    send: function (id, data) {
-      workers.forEach(function (worker) {
-        if (!worker || !worker.url) {
-          return;
-        }
-        worker.port.emit(id, data);
-      });
-    },
-    receive: (id, callback) => options_arr.push([id, callback])
-  };
-})();
 
 exports.context = function (arr) {
   cm.Menu({
@@ -246,9 +164,9 @@ exports.startup = function (callback) {
 // http manipulations
 var httpResponseObserver = {
   observe: function (subject) {
-    var httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
+    let httpChannel = subject.QueryInterface(Ci.nsIHttpChannel);
     // make sure translate.google.* is in 'Content-Security-Policy'
-    var csp;
+    let csp;
     try {
       csp = httpChannel.getResponseHeader('Content-Security-Policy');
     } catch (e) {}
@@ -271,14 +189,12 @@ var httpResponseObserver = {
   get observerService() {
     return Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
   },
-  register: function() {
+  register: function () {
     this.observerService.addObserver(this, 'http-on-examine-response', false);
   },
-  unregister: function() {
+  unregister: function () {
     this.observerService.removeObserver(this, 'http-on-examine-response');
   }
 };
 httpResponseObserver.register();
-unload.when(function () {
-  httpResponseObserver.unregister();
-});
+unload.when(() => httpResponseObserver.unregister());

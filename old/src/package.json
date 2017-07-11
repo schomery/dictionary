@@ -1,0 +1,73 @@
+{
+  "title": "Dictionary (Google™ Translate) Anywhere",
+  "name": "idanywhere",
+  "description": "Dictionary Anywhere provides access to a floating multilingual Google™ Translate panel on any webpage.",
+  "id": "jid0-fbHwsGfb6kJyq2hj65KnbGte3yT@jetpack",
+  "license": "Mozilla Public License, version 2.0",
+  "version": "0.2.1",
+  "author": "Jeremy Schomery",
+  "main": "./lib/common.js",
+  "url": "http://add0n.com/dictionary.html",
+  "permissions": {
+    "private-browsing": true,
+    "multiprocess": true,
+    "unsafe-content-script": true,
+    "cross-domain-content": [
+      "http://translate.google.*",
+      "https://translate.google.*"
+    ]
+  },
+  "preferences": [
+    {
+      "name": "forced",
+      "type": "bool",
+      "title": "Overwrite Content Security Policy to allow script injection",
+      "value": true,
+      "hidden": true
+    },
+    {
+      "type": "integer",
+      "name": "width",
+      "value": 400,
+      "title": "Translator's width (in px):",
+      "description": "This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content."
+    },
+    {
+      "type": "integer",
+      "name": "offset-x",
+      "value": 0,
+      "title": "Offset in x direction for translator's bubble (in px):",
+      "description": "Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset."
+    },
+    {
+      "type": "integer",
+      "name": "offset-y",
+      "value": 0,
+      "title": "Offset in y direction for translator's bubble (in px):",
+      "description": "Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset."
+    },
+    {
+      "name": "engine",
+      "type": "menulist",
+      "title": "Translator's Engine:",
+      "value": 0,
+      "options": [
+        {
+          "value": "0",
+          "label": "translate.google.com"
+        },
+        {
+          "value": "1",
+          "label": "translate.google.cn"
+        }
+      ]
+    },
+    {
+      "name": "show",
+      "type": "bool",
+      "title": "Open FAQs page on upgrade",
+      "description": "If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.",
+      "value": true
+    }
+  ]
+}

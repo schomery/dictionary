@@ -1,26 +1,47 @@
 'use strict';
 
-/**** wrapper (start) ****/
-if (typeof require !== 'undefined') {
-  var app = require('./firefox/firefox');
-  var config = require('./config');
-}
-/**** wrapper (end) ****/
+var app = app || require('./firefox/firefox');
+var isFirefox = typeof require !== 'undefined', config;
+var isOpera = !isFirefox && navigator.userAgent.indexOf('OPR') !== -1;
 
-/* options */
-app.options.receive('changed', function (o) {
-  config.set(o.pref, o.value);
-  app.options.send('set', {
-    pref: o.pref,
-    value: config.get(o.pref)
-  });
-});
-app.options.receive('get', function (pref) {
-  app.options.send('set', {
-    pref: pref,
-    value: config.get(pref)
-  });
-});
+var config = {};
+config.options = {
+  get engine () {
+    return +app.storage.read('engine') || 0;
+  },
+  get width () {
+    return +app.storage.read('width') || 400;
+  },
+  offset: {
+    get x () {
+      return +app.storage.read('offset-x') || (isOpera ? 10 : 0);
+    },
+    get y () {
+      return +app.storage.read('offset-y') || (isOpera ? 20 : 0);
+    }
+  },
+  get mheight () {
+    return +app.storage.read('mheight') || 0;
+  },
+  get fixed () {
+    return app.storage.read('fixed') === 'true' || app.storage.read('fixed') === true ? true : false;
+  },
+  get forced () {
+    return app.storage.read('forced') === 'false' || app.storage.read('forced') === false ? false : true;
+  }
+};
+config.welcome = {
+  get version () {
+    return app.storage.read('version');
+  },
+  set version (val) {
+    app.storage.write('version', val);
+  },
+  timeout: 3,
+  get show () {
+    return app.storage.read('show') === 'false' || app.storage.read('show') === false ? false : true; // default is true
+  }
+};
 
 /* welcome page */
 app.startup(function () {
@@ -59,6 +80,7 @@ app.inject.receive('hashrequest', function () {
   app.inject.send.call(this, 'hashchange', app.storage.read('hash'));
 });
 app.inject.receive('open', app.tab.open);
+
 (function (callback) {
   app.inject.receive('settings', callback);
   app.on('width', callback);

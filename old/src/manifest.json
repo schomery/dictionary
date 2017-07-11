@@ -1,0 +1,74 @@
+{
+  "name": "Panel View for Google™ Translate",
+  "short_name": "idanywhere",
+  "description": "Access to a floating multilingual Google™ Translate panel on any webpage",
+  "author": "Jeremy Schomery",
+  "version": "0.2.1",
+  "manifest_version": 2,
+  "permissions": [
+    "storage",
+    "tabs",
+    "contextMenus",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "data/icons/activator.png",
+    "data/icons/loading.gif"
+  ],
+  "background": {
+    "page": "lib/chrome/background.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": [
+        "http://translate.google.com/m/*",
+        "http://translate.google.cn/m/*",
+        "https://translate.google.com/m/*",
+        "https://translate.google.cn/m/*"
+      ],
+      "js": ["data/content_script/chrome/chrome.js", "data/content_script/inject.js"],
+      "css": ["data/content_script/inject.css"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": [
+        "http://translate.google.com/m/*",
+        "http://translate.google.cn/m/*",
+        "https://translate.google.com/m/*",
+        "https://translate.google.cn/m/*"
+      ],
+      "js": ["data/content_script/chrome/chrome.js", "data/content_script/top.js"],
+      "css": ["data/content_script/inject.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://translate.google.com/*",
+        "http://translate.google.com/*",
+        "https://translate.google.cn/*",
+        "http://translate.google.cn/*"
+      ],
+      "js": ["data/panel/chrome/chrome.js", "data/panel/inject.js"],
+      "css": ["data/panel/inject.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "options_ui": {
+    "page": "data/chrome/options/index.html",
+    "chrome_style": true
+  },
+  "homepage_url": "http://add0n.com/dictionary.html",
+  "icons": {
+    "16": "data/icons/16.png",
+    "48": "data/icons/48.png",
+    "128": "data/icons/128.png"
+  }
+}

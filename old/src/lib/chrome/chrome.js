@@ -1,31 +1,50 @@
 'use strict';
 
+function EventEmitter () {
+  this.callbacks = {};
+}
+EventEmitter.prototype.on = function (id, callback) {
+  this.callbacks[id] = this.callbacks[id] || [];
+  this.callbacks[id].push(callback);
+};
+EventEmitter.prototype.emit = function (id, data) {
+  (this.callbacks[id] || []).forEach(c => c(data));
+};
+
 var app = new EventEmitter();
 
 app.on('load', function () {
-  var script = document.createElement('script');
+  let script = document.createElement('script');
   document.body.appendChild(script);
   script.src = '../common.js';
 });
 
-app.Promise = Promise;
-
 app.storage = (function () {
-  var objs = {};
+  let objs = {};
   chrome.storage.local.get(null, function (o) {
     objs = o;
     app.emit('load');
   });
-  return {
-    read: function (id) {
-      return (objs[id] || !isNaN(objs[id])) ? objs[id] + '' : objs[id];
-    },
-    write: function (id, data) {
-      objs[id] = data;
-      var tmp = {};
-      tmp[id] = data;
-      chrome.storage.local.set(tmp, function () {});
+  chrome.storage.onChanged.addListener(prefs => {
+    Object.keys(prefs).forEach(n => objs[n] = prefs[n].newValue);
+    if (prefs.engine) {
+      app.emit('engine', prefs.engine.newValue);
     }
+    if (prefs.width) {
+      app.emit('width', prefs.width.newValue);
+    }
+    if (prefs.mheight) {
+      app.emit('mheight', prefs.mheight.newValue);
+    }
+    if (prefs['offset-x'] || prefs['offset-y']) {
+      app.emit('offset');
+    }
+  });
+  return {
+    read: (id) => objs[id],
+    write: (id, data) => chrome.storage.local.set({
+      [id]: data
+    })
   };
 })();
 
@@ -95,56 +114,11 @@ app.panel = (function () {
 })();
 
 app.tab = {
-  open: function (url, inBackground, inCurrent) {
-    if (inCurrent) {
-      chrome.tabs.update(null, {url: url});
-    }
-    else {
-      chrome.tabs.create({
-        url: url,
-        active: typeof inBackground === 'undefined' ? true : !inBackground
-      });
-    }
-  },
-  list: function () {
-    var d = app.Promise.defer();
-    chrome.tabs.query({
-      currentWindow: false
-    }, function (tabs) {
-      d.resolve(tabs);
-    });
-    return d.promise;
-  }
+  open: (url) => chrome.tabs.create({url})
 };
 
-app.version = function () {
-  return chrome[chrome.runtime && chrome.runtime.getManifest ? 'runtime' : 'extension'].getManifest().version;
-};
-
+app.version = () => chrome.runtime.getManifest().version;
 app.timer = window;
-
-app.options = {
-  send: function (id, data) {
-    chrome.tabs.query({}, function (tabs) {
-      tabs.forEach(function (tab) {
-        if (tab.url.indexOf(chrome.extension.getURL('data/options/index.html') === 0)) {
-          chrome.tabs.sendMessage(tab.id, {method: id, data: data}, function () {});
-        }
-      });
-    });
-  },
-  receive: function (id, callback) {
-    chrome.runtime.onMessage.addListener(function (message, sender) {
-      if (
-        message.method === id &&
-        sender.tab &&
-        sender.tab.url.indexOf(chrome.extension.getURL('data/options/index.html') === 0)
-      ) {
-        callback.call(sender.tab, message.data);
-      }
-    });
-  }
-};
 
 app.context = function (arr) {
   arr.forEach(function (obj) {
@@ -181,21 +155,19 @@ app.startup = (function () {
 // http manipulations
 chrome.webRequest.onHeadersReceived.addListener(
   function (details) {
-    var headers = details.responseHeaders;
-    for (var i = headers.length - 1; i >= 0; --i) {
-      var header = headers[i].name.toLowerCase();
+    let responseHeaders = details.responseHeaders;
+    for (let i = responseHeaders.length - 1; i >= 0; --i) {
+      let header = responseHeaders[i].name.toLowerCase();
       if (header === 'x-frame-options' || header === 'frame-options') {
-        headers.splice(i, 1);
+        responseHeaders.splice(i, 1);
       }
     }
-    return {responseHeaders: headers};
+    return {responseHeaders};
   },
   {
     urls: [
-      'https://translate.google.com/*',
-      'http://translate.google.com/*',
-      'https://translate.google.cn/*',
-      'http://translate.google.cn/*'
+      '*://translate.google.com/*',
+      '*://translate.google.cn/*'
     ],
     types: ['sub_frame']
   },
@@ -203,15 +175,15 @@ chrome.webRequest.onHeadersReceived.addListener(
 );
 chrome.webRequest.onHeadersReceived.addListener(
   function (details) {
-    var headers = details.responseHeaders;
-    for (var i = headers.length - 1; i >= 0; --i) {
-      var header = headers[i];
+    let responseHeaders = details.responseHeaders;
+    for (let i = responseHeaders.length - 1; i >= 0; --i) {
+      let header = responseHeaders[i];
       if (header === 'Content-Security-Policy') {
-        headers[i] = header
+        responseHeaders[i] = header
           .replace(/frame\-src\s*([^\;]*);/, 'frame\-src $1 translate.google.com translate.google.cn;');
       }
     }
-    return {responseHeaders: headers};
+    return {responseHeaders};
   },
   {
     urls: ['<all_urls>'],
