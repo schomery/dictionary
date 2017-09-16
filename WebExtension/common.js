@@ -15,10 +15,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 });
 
 /* context menu */
-(function (callback) {
+(function(callback) {
   chrome.runtime.onInstalled.addListener(callback);
   chrome.runtime.onStartup.addListener(callback);
-})(function () {
+})(function() {
   chrome.contextMenus.create({
     id: 'open-google',
     title: 'Translate Page (Google)',
@@ -55,15 +55,15 @@ chrome.contextMenus.onClicked.addListener(info => {
 
 // http manipulations
 chrome.webRequest.onHeadersReceived.addListener(details => {
-    let responseHeaders = details.responseHeaders;
-    for (let i = responseHeaders.length - 1; i >= 0; --i) {
-      let header = responseHeaders[i].name.toLowerCase();
-      if (header === 'x-frame-options' || header === 'frame-options') {
-        responseHeaders.splice(i, 1);
-      }
+  const responseHeaders = details.responseHeaders;
+  for (let i = responseHeaders.length - 1; i >= 0; --i) {
+    const header = responseHeaders[i].name.toLowerCase();
+    if (header === 'x-frame-options' || header === 'frame-options') {
+      responseHeaders.splice(i, 1);
     }
-    return {responseHeaders};
-  },
+  }
+  return {responseHeaders};
+},
   {
     urls: [
       '*://translate.google.com/*',
@@ -74,23 +74,23 @@ chrome.webRequest.onHeadersReceived.addListener(details => {
   ['blocking', 'responseHeaders']
 );
 chrome.webRequest.onHeadersReceived.addListener(details => {
-    let responseHeaders = details.responseHeaders;
-    for (let i = responseHeaders.length - 1; i >= 0; --i) {
-      const header = responseHeaders[i].name;
-      if (header === 'Content-Security-Policy' || header === 'content-security-policy') {
-        responseHeaders[i].value = responseHeaders[i].value
-          .replace(/frame\-src\s*([^\;]*);/, 'frame-src $1 translate.google.com translate.google.cn;');
+  const responseHeaders = details.responseHeaders;
+  for (let i = responseHeaders.length - 1; i >= 0; --i) {
+    const header = responseHeaders[i].name;
+    if (header === 'Content-Security-Policy' || header === 'content-security-policy') {
+      responseHeaders[i].value = responseHeaders[i].value
+        .replace(/frame-src\s*([^;]*);/, 'frame-src $1 translate.google.com translate.google.cn;');
 
-        if (isFirefox) {
-          responseHeaders[i].value = responseHeaders[i].value
-            .replace(/child\-src\s*([^\;]*);/, 'child-src $1 translate.google.com translate.google.cn;')
-            .replace(/default\-src\s*([^\;]*);/, 'default-src $1 translate.google.com translate.google.cn;')
-            .replace(/script\-src\s*([^\;]*);/, 'script-src $1 translate.google.com translate.google.cn;');
-        }
+      if (isFirefox) {
+        responseHeaders[i].value = responseHeaders[i].value
+          .replace(/child-src\s*([^;]*);/, 'child-src $1 translate.google.com translate.google.cn;')
+          .replace(/default-src\s*([^;]*);/, 'default-src $1 translate.google.com translate.google.cn;')
+          .replace(/script-src\s*([^;]*);/, 'script-src $1 translate.google.com translate.google.cn;');
       }
     }
-    return {responseHeaders};
-  },
+  }
+  return {responseHeaders};
+},
   {
     urls: ['<all_urls>'],
     types: ['main_frame']
@@ -103,7 +103,7 @@ chrome.storage.local.get({
   'version': null,
   'faqs': true
 }, prefs => {
-  let version = chrome.runtime.getManifest().version;
+  const version = chrome.runtime.getManifest().version;
 
   if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
     chrome.storage.local.set({version}, () => {
@@ -114,7 +114,7 @@ chrome.storage.local.get({
     });
   }
 });
-(function () {
-  let {name, version} = chrome.runtime.getManifest();
+(function() {
+  const {name, version} = chrome.runtime.getManifest();
   chrome.runtime.setUninstallURL('http://add0n.com/feedback.html?name=' + name + '&version=' + version);
 })();

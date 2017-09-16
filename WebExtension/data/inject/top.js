@@ -7,13 +7,13 @@ var prefs = {
   hash: '#auto/en'
 };
 
-function getURL (phrase) {
-  const engine = prefs.engine + '' === '0' ? 'https://translate.google.com/' : 'https://translate.google.cn/';
+function getURL(phrase) {
+  const engine = String(prefs.engine) === '0' ? 'https://translate.google.com/' : 'https://translate.google.cn/';
   return engine + 'm/translate' + prefs.hash + '/' + encodeURIComponent(phrase);
 }
 
 // panel
-var panel = (function () {
+var panel = (function() {
   let iframe;
   chrome.runtime.onMessage.addListener(request => {
     if (request.method === 'resize') {
@@ -22,7 +22,7 @@ var panel = (function () {
         height = Math.max(height, prefs.mheight);
       }
       if (iframe) {
-        iframe.style.height = height;
+        iframe.style.height = height + 'px';
       }
     }
     else if (request.method === 'loaded') {
@@ -36,7 +36,7 @@ var panel = (function () {
         iframe.src = getURL(panel.phrase);
       }
     },
-    load: function () {
+    load: function() {
       iframe = Object.assign(document.createElement('iframe'), {
         style: `width: ${prefs.width}px; height: 500px;`,
         src: 'about:blank'
@@ -44,12 +44,12 @@ var panel = (function () {
       iframe.classList.add('itanywhere-panel', 'itanywhere-loading');
       document.body.appendChild(iframe);
     },
-    unload: function () {
+    unload: function() {
       if (iframe && iframe.parentNode) {
         iframe.parentNode.removeChild(iframe);
       }
     },
-    show: function (e) {
+    show: function(e) {
       if (!iframe) {
         panel.load();
       }
@@ -72,13 +72,13 @@ var panel = (function () {
         behavior: 'smooth'
       });*/
     },
-    hide: function () {
+    hide: function() {
       if (iframe) {
         iframe.style.display = 'none';
         iframe.style.height = '300px';
       }
     },
-    width: function () {
+    width: function() {
       if (iframe) {
         iframe.style.width = `${prefs.width}px`;
       }
