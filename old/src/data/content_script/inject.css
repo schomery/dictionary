@@ -50,7 +50,7 @@
     transform: scale3d(1, 1, 1);
   }
 }
-.bounceIn {
+.itanywhere-bounceIn {
   animation-duration: .5s;
   -webkit-animation-duration: .5s;
   animation-fill-mode: both;

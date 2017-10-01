@@ -55,7 +55,7 @@ var pointer = (function () {
     load: function() {
       div = Object.assign(document.createElement('div'), {
         'title': 'Google Translator Anywhere',
-        'onanimationend': () => div.classList.remove('bounceIn'),
+        'onanimationend': () => div.classList.remove('itanywhere-bounceIn'),
         'onclick': post.show
       });
       div.classList.add('itanywhere-activator');
@@ -78,7 +78,7 @@ var pointer = (function () {
         top: Math.max(top, 0) + 'px',
         display: 'block'
       });
-      div.classList.add('bounceIn');
+      div.classList.add('itanywhere-bounceIn');
       //hide pointer after 3 seconds
       window.clearTimeout(timer);
       timer = window.setTimeout(pointer.hide, 3000);
