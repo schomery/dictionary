@@ -10,6 +10,7 @@ function restore() {
     'offset-x': isOpera ? 10 : 0,
     'offset-y': isOpera ? 20 : 0,
     'engine': 0,
+    'use-pointer': true,
     'show': true
   }, prefs => {
     document.getElementById('width').value = prefs.width;
@@ -17,6 +18,7 @@ function restore() {
     document.getElementById('offset-x').value = prefs['offset-x'];
     document.getElementById('offset-y').value = prefs['offset-y'];
     document.getElementById('engine').selectedIndex = prefs.engine;
+    document.getElementById('use-pointer').checked = prefs['use-pointer'];
     document.getElementById('show').checked = prefs.show;
   });
 }
@@ -28,6 +30,7 @@ function save() {
     'offset-x': Number(document.getElementById('offset-x').value),
     'offset-y': Number(document.getElementById('offset-y').value),
     'engine': document.getElementById('engine').selectedIndex,
+    'use-pointer': document.getElementById('use-pointer').checked,
     'show': document.getElementById('show').checked
   };
 
@@ -46,5 +49,23 @@ document.getElementById('save').addEventListener('click', () => {
   catch (e) {
     log.textContent = e.message;
     setTimeout(() => log.textContent = '', 750);
+  }
+});
+
+chrome.storage.onChanged.addListener(prefs => {
+  const mouse = prefs['use-pointer'];
+  if (mouse) {
+    console.log(mouse)
+    if (mouse.newValue) {
+      chrome.contextMenus.remove('open-panel');
+    }
+    else {
+      chrome.contextMenus.create({
+        id: 'open-panel',
+        title: 'Translate Selection',
+        contexts: ['selection'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
   }
 });

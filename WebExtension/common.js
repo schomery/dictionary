@@ -15,10 +15,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 });
 
 /* context menu */
-(function(callback) {
+(callback => {
   chrome.runtime.onInstalled.addListener(callback);
   chrome.runtime.onStartup.addListener(callback);
-})(function() {
+})(() => {
   chrome.contextMenus.create({
     id: 'open-google',
     title: 'Translate Page (Google)',
@@ -31,9 +31,30 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     contexts: ['page', 'link'],
     documentUrlPatterns: ['*://*/*']
   });
+  chrome.storage.local.get({
+    'use-pointer': true
+  }, prefs => {
+    if (prefs['use-pointer'] === false) {
+      chrome.contextMenus.create({
+        id: 'open-panel',
+        title: 'Translate Selection',
+        contexts: ['selection'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
+  });
 });
 
-chrome.contextMenus.onClicked.addListener(info => {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'open-panel') {
+    return chrome.tabs.sendMessage(tab.id, {
+      method: 'open-panel',
+      phrase: info.selectionText
+    }, {
+      frameId: info.frameId
+    });
+  }
+
   if (info.menuItemId === 'open-current') {
     open(info.linkUrl || info.pageUrl);
   }
@@ -114,7 +135,7 @@ chrome.storage.local.get({
     });
   }
 });
-(function() {
+{
   const {name, version} = chrome.runtime.getManifest();
   chrome.runtime.setUninstallURL('http://add0n.com/feedback.html?name=' + name + '&version=' + version);
-})();
+}

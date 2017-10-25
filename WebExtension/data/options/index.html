@@ -7,6 +7,7 @@
       padding: 10px;
       font-family: arial, sans-serif;
       font-size: 13px;
+      min-width: 400px;
     }
     label {
       display: block;
@@ -58,10 +59,16 @@
     </select></label>
   </p>
   <label>
+    <input id="use-pointer" type="checkbox">
+    Display word selection bubble
+    <p>If this option is checked, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</p>
+  </label>
+  <label>
     <input id="show" type="checkbox">
     Open FAQs page on upgrade
     <p>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</p>
   </label>
+
   <p>
     <button id="save">Save</button>
     <span id="status"></span>

@@ -1,36 +1,41 @@
 'use strict';
 
-var id;
-
-// scaling
-function scale(value) {
-  if (value < 1.0) {
-    document.documentElement.style.transform = `scale(${value})`;
-    document.documentElement.style['transform-origin'] = '0 0';
-    document.documentElement.style.width = `${1 / value * 100}%`;
-  }
-}
-chrome.storage.local.get({
-  scale: 1.0
-}, prefs => scale(prefs.scale));
-chrome.storage.onChanged.addListener(prefs => {
-  if (prefs.scale) {
-    scale(prefs.scale.newValue);
-  }
-});
-
-function resize() {
-  const page = document.body || document.documentElement;
-  if (page) {
-    chrome.runtime.sendMessage({
-      method: 'resize',
-      height: page.getBoundingClientRect().height
-    });
-  }
-}
-
 if (window.top !== window) {  // only in frames
-  window.addEventListener('hashchange', function() {
+  const link = document.createElement('link');
+  link.setAttribute('rel', 'stylesheet');
+  link.href = chrome.runtime.getURL('/data/panel/inject.css');
+  document.documentElement.appendChild(link);
+
+  let id;
+
+  // scaling
+  const scale = value => {
+    if (value < 1.0) {
+      document.documentElement.style.transform = `scale(${value})`;
+      document.documentElement.style['transform-origin'] = '0 0';
+      document.documentElement.style.width = `${1 / value * 100}%`;
+    }
+  };
+  chrome.storage.local.get({
+    scale: 1.0
+  }, prefs => scale(prefs.scale));
+  chrome.storage.onChanged.addListener(prefs => {
+    if (prefs.scale) {
+      scale(prefs.scale.newValue);
+    }
+  });
+
+  const resize = () => {
+    const page = document.body || document.documentElement;
+    if (page) {
+      chrome.runtime.sendMessage({
+        method: 'resize',
+        height: page.getBoundingClientRect().height
+      });
+    }
+  };
+
+  window.addEventListener('hashchange', () => {
     const part = location.hash.split('/');
     if (part.length >= 2 && part[0][0] === '#') {
       chrome.storage.local.set({
@@ -38,9 +43,7 @@ if (window.top !== window) {  // only in frames
       });
     }
   });
-  window.addEventListener('scroll', function() {
-    window.scrollTo(0, 0);
-  });
+  window.addEventListener('scroll', () => window.scrollTo(0, 0));
 
   document.addEventListener('DOMContentLoaded', function() {
     // This is a must have for this extension. We need to resize the injected panel when DOM is modified. There is a timeout to prevent multiple actions.

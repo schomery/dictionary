@@ -118,7 +118,7 @@ window.addEventListener('message', e => {
 }, false);
 
 /* prefs */
-chrome.storage.local.get(prefs, ps => prefs = Object.assign(prefs, ps));
+chrome.storage.local.get(prefs, ps => Object.assign(prefs, ps));
 chrome.storage.onChanged.addListener(ps => {
   Object.entries(ps).forEach(([key, value]) => {
     prefs[key] = value.newValue;

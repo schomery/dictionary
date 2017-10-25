@@ -1,6 +1,7 @@
 body {
   overflow: hidden;
   background-color: transparent !important;
+  color: red;
 }
 div[class=gp-footer] {
   display: none;

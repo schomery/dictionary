@@ -22,7 +22,17 @@ var isOpera = navigator.userAgent.indexOf('OPR') !== -1;
 var sprefs = { // do not get mixed with top.js
   'offset-x': isOpera ? 10 : 0,
   'offset-y': isOpera ? 20 : 0,
+  'use-pointer': true
 };
+
+var ec;
+document.addEventListener('contextmenu', e => ec = e);
+chrome.runtime.onMessage.addListener(request => {
+  if (request.method === 'open-panel') {
+    post.phrase(request.phrase);
+    post.show(ec);
+  }
+});
 
 window.addEventListener('message', e => {
   if (e.data && e.data.cmd === 'idanywhere-show') {
@@ -49,7 +59,7 @@ window.addEventListener('message', e => {
 }, false);
 
 // pointer
-var pointer = (function () {
+var pointer = (function() {
   let div, timer;
   return {
     load: function() {
@@ -123,7 +133,7 @@ var mouse = (function() {
       window.clearTimeout(id);
       id = window.setTimeout(function() {
         const selected = getSelection(e);
-        if (selected) {
+        if (selected && sprefs['use-pointer']) {
           pointer.move(e.clientX + window.scrollX + 3, e.clientY + window.scrollY - 40);
           post.phrase(selected);
         }
@@ -163,7 +173,7 @@ if (document.readyState !== 'loading') {
 }
 
 /* prefs */
-chrome.storage.local.get(sprefs, ps => sprefs = Object.assign(sprefs, ps));
+chrome.storage.local.get(sprefs, ps => Object.assign(sprefs, ps));
 chrome.storage.onChanged.addListener(ps => {
   Object.entries(ps).forEach(([key, value]) => {
     sprefs[key] = value.newValue;
