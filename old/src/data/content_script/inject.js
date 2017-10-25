@@ -53,7 +53,7 @@ var pointer = (function () {
       div.setAttribute('class', 'itanywhere-activator');
       div.setAttribute('title', 'Google Translator Anywhere');
       div.addEventListener('animationend', function () {
-        div.classList.remove('bounceIn');
+        div.classList.remove('itanywhere-bounceIn');
       });
       div.addEventListener('click', post.show, false);
       document.body.appendChild(div);
@@ -75,7 +75,7 @@ var pointer = (function () {
       div.style.left = Math.max(left, 0) + 'px';
       div.style.top = Math.max(top, 0) + 'px';
       div.style.display = 'block';
-      div.classList.add('bounceIn');
+      div.classList.add('itanywhere-bounceIn');
       //hide pointer after 3 seconds
       if (timer) {
         window.clearTimeout(timer);

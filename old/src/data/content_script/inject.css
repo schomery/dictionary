@@ -1,4 +1,4 @@
-@-webkit-keyframes bounceIn {
+@-webkit-keyframes itanywhere-bounceIn {
   0%, 20%, 40%, 60%, 80%, 100% {
     -webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
   }
@@ -24,7 +24,7 @@
     -webkit-transform: scale3d(1, 1, 1);
   }
 }
-@keyframes bounceIn {
+@keyframes itanywhere-bounceIn {
   0%, 20%, 40%, 60%, 80%, 100% {
     transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
   }
@@ -50,13 +50,13 @@
     transform: scale3d(1, 1, 1);
   }
 }
-.bounceIn {
+.itanywhere-bounceIn {
   animation-duration: .5s;
   -webkit-animation-duration: .5s;
   animation-fill-mode: both;
   -webkit-animation-fill-mode: both;
-  animation-name: bounceIn;
-  -webkit-animation-name: bounceIn;
+  animation-name: itanywhere-bounceIn;
+  -webkit-animation-name: itanywhere-bounceIn;
 }
 
 .itanywhere-activator {
