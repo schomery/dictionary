@@ -19,26 +19,32 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   chrome.runtime.onInstalled.addListener(callback);
   chrome.runtime.onStartup.addListener(callback);
 })(() => {
-  chrome.contextMenus.create({
-    id: 'open-google',
-    title: 'Translate Page (Google)',
-    contexts: ['page', 'link'],
-    documentUrlPatterns: ['*://*/*']
-  });
-  chrome.contextMenus.create({
-    id: 'open-bing',
-    title: 'Translate Page (Bing)',
-    contexts: ['page', 'link'],
-    documentUrlPatterns: ['*://*/*']
-  });
   chrome.storage.local.get({
-    'use-pointer': true
+    'use-pointer': true,
+    'google-page': true,
+    'bing-page': false
   }, prefs => {
     if (prefs['use-pointer'] === false) {
       chrome.contextMenus.create({
         id: 'open-panel',
         title: 'Translate Selection',
         contexts: ['selection'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
+    if (prefs['google-page']) {
+      chrome.contextMenus.create({
+        id: 'open-google',
+        title: 'Translate with Google',
+        contexts: ['page', 'link'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
+    if (prefs['bing-page']) {
+      chrome.contextMenus.create({
+        id: 'open-bing',
+        title: 'Translate with Bing',
+        contexts: ['page', 'link'],
         documentUrlPatterns: ['*://*/*']
       });
     }
@@ -60,7 +66,10 @@ var onClicked = (info, tab) => {
       hash: '#auto/en'
     }, prefs => {
       const [sl, tl] = prefs.hash.replace('#', '').split('/');
-      const link = info.linkUrl || info.pageUrl;
+      let link = info.linkUrl || info.pageUrl;
+      if (link.startsWith('about:reader?url=')) {
+        link = decodeURIComponent(link.replace('about:reader?url=', ''));
+      }
       let url = `https://translate.google.${prefs.engine === 1 ? 'cn' : 'com'}/translate` +
         `?hl=en&sl=${sl}&tl=${tl}&u=${encodeURIComponent(link)}`;
       if (info.menuItemId === 'open-bing') {

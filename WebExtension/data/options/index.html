@@ -27,30 +27,43 @@
       width: 100%;
       height: 100px;
     }
+    hr {
+      border: none;
+      border-top: dashed 1px #ccc;
+    }
+    ol {
+      margin: 0;
+      padding: 0 15px;
+      font-size: 90%;
+      color: #555;
+    }
   </style>
 </head>
 
 <body>
-  <label>
-    Translator's width (in px):
-    <input id="width" type="number">
-    <p>This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</p>
-  </label>
-  <label>
-    Translator's scaling (0.5 - 1.0):
-    <input id="scale" type="number" step="0.01" min="0.5" max="1.0">
-    <p>This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.</p>
-  </label>
-  <label>
-    Offset in x direction for translator's bubble (in px):
-    <input id="offset-x" type="number">
-    <p>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</p>
-  </label>
-  <label>
-    Offset in y direction for translator's bubble (in px):
-    <input id="offset-y" type="number">
-    <p>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</p>
-  </label>
+  <table width="100%">
+    <colgroup>
+      <col>
+      <col style="text-align: right">
+    </colgroup>
+    <tr>
+      <td>Translator's width (in px)<sup>1</sup>:</td>
+      <td><input id="width" type="number"></td>
+    </tr>
+    <tr>
+      <td>Translator's scaling (0.5 - 1.0)<sup>2</sup>:</td>
+      <td><input id="scale" type="number" step="0.01" min="0.5" max="1.0"></td>
+    </tr>
+    <tr>
+      <td>Offset in x direction for translator's bubble (in px)<sup>3</sup>:</td>
+      <td><input id="offset-x" type="number"></td>
+    </tr>
+    <tr>
+      <td>Offset in y direction for translator's bubble (in px)<sup>4</sup>:</td>
+      <td><input id="offset-y" type="number"></td>
+    </tr>
+  </table>
+
   <p>
     <label>Translator's Engine:
     <select id="engine">
@@ -58,21 +71,46 @@
       <option value="1">translate.google.cn</option>
     </select></label>
   </p>
-  <label>
-    <input id="use-pointer" type="checkbox">
-    Display word selection bubble
-    <p>If this option is checked, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</p>
-  </label>
-  <label>
-    <input id="show" type="checkbox">
-    Open FAQs page on upgrade
-    <p>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</p>
-  </label>
+
+  <table width=100%>
+    <tr>
+      <td><input id="use-pointer" type="checkbox"></td>
+      <td>
+        <label for="use-pointer">Display word selection bubble<sup>5</sup></label>
+      </td>
+    </tr>
+    <tr>
+      <td><input id="google-page" type="checkbox"></td>
+      <td>
+        <label for="google-page">Add "Translate with Google" to the right-click menu over "page" and "links"</label>
+      </td>
+    </tr>
+    <tr>
+      <td><input id="bing-page" type="checkbox"></td>
+      <td>
+        <label for="bing-page">Add "Translate with Bing" to the right-click menu over "page" and "links"</label>
+      </td>
+    </tr>
+    <tr>
+      <td><input id="show" type="checkbox"></td>
+      <td>Open FAQs page on upgrade<sup>6</sup></td>
+    </tr>
+  </table>
 
   <p>
     <button id="save">Save</button>
     <span id="status"></span>
   </p>
+
+  <hr>
+  <ol>
+    <li>This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</li>
+    <li>This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.</li>
+    <li>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</li>
+    <li>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</li>
+    <li>If this option is checked, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
+    <li>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</li>
+  </ol>
 
   <script src="index.js"></script>
 </body>

@@ -11,6 +11,8 @@ function restore() {
     'offset-y': isOpera ? 20 : 0,
     'engine': 0,
     'use-pointer': true,
+    'google-page': true,
+    'bing-page': false,
     'show': true
   }, prefs => {
     document.getElementById('width').value = prefs.width;
@@ -19,6 +21,8 @@ function restore() {
     document.getElementById('offset-y').value = prefs['offset-y'];
     document.getElementById('engine').selectedIndex = prefs.engine;
     document.getElementById('use-pointer').checked = prefs['use-pointer'];
+    document.getElementById('google-page').checked = prefs['google-page'];
+    document.getElementById('bing-page').checked = prefs['bing-page'];
     document.getElementById('show').checked = prefs.show;
   });
 }
@@ -31,6 +35,8 @@ function save() {
     'offset-y': Number(document.getElementById('offset-y').value),
     'engine': document.getElementById('engine').selectedIndex,
     'use-pointer': document.getElementById('use-pointer').checked,
+    'google-page': document.getElementById('google-page').checked,
+    'bing-page': document.getElementById('bing-page').checked,
     'show': document.getElementById('show').checked
   };
 
@@ -65,6 +71,34 @@ chrome.storage.onChanged.addListener(prefs => {
         contexts: ['selection'],
         documentUrlPatterns: ['*://*/*']
       });
+    }
+  }
+  const google = prefs['google-page'];
+  if (google) {
+    if (google.newValue) {
+      chrome.contextMenus.create({
+        id: 'open-google',
+        title: 'Translate with Google',
+        contexts: ['page', 'link'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
+    else {
+      chrome.contextMenus.remove('open-google');
+    }
+  }
+  const bing = prefs['bing-page'];
+  if (bing) {
+    if (bing.newValue) {
+      chrome.contextMenus.create({
+        id: 'open-bing',
+        title: 'Translate with Bing',
+        contexts: ['page', 'link'],
+        documentUrlPatterns: ['*://*/*']
+      });
+    }
+    else {
+      chrome.contextMenus.remove('open-bing');
     }
   }
 });
