@@ -23,6 +23,14 @@
       "common.js"
     ]
   },
+  "browser_action":{
+    "default_icon": {
+      "16": "data/icons/16.png",
+      "24": "data/icons/24.png",
+      "32": "data/icons/32.png",
+      "64": "data/icons/64.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

@@ -45,34 +45,36 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+var onClicked = (info, tab) => {
   if (info.menuItemId === 'open-panel') {
-    return chrome.tabs.sendMessage(tab.id, {
+    chrome.tabs.sendMessage(tab.id, {
       method: 'open-panel',
       phrase: info.selectionText
     }, {
       frameId: info.frameId
     });
   }
-
-  if (info.menuItemId === 'open-current') {
-    open(info.linkUrl || info.pageUrl);
+  else {
+    chrome.storage.local.get({
+      engine: 0,
+      hash: '#auto/en'
+    }, prefs => {
+      const [sl, tl] = prefs.hash.replace('#', '').split('/');
+      const link = info.linkUrl || info.pageUrl;
+      let url = `https://translate.google.${prefs.engine === 1 ? 'cn' : 'com'}/translate` +
+        `?hl=en&sl=${sl}&tl=${tl}&u=${encodeURIComponent(link)}`;
+      if (info.menuItemId === 'open-bing') {
+        url = `http://www.microsofttranslator.com/bv.aspx?from=${sl}&to=${tl}&a=${encodeURIComponent(link)}`;
+      }
+      chrome.tabs.create({url});
+    });
   }
-
-  chrome.storage.local.get({
-    engine: 0,
-    hash: '#auto/en'
-  }, prefs => {
-    const [sl, tl] = prefs.hash.replace('#', '').split('/');
-    const link = info.linkUrl || info.pageUrl;
-    let url = `https://translate.google.${prefs.engine === 1 ? 'cn' : 'com'}/translate` +
-      `?hl=en&sl=${sl}&tl=${tl}&u=${encodeURIComponent(link)}`;
-    if (info.menuItemId === 'open-bing') {
-      url = `http://www.microsofttranslator.com/bv.aspx?from=${sl}&to=${tl}&a=${encodeURIComponent(link)}`;
-    }
-    chrome.tabs.create({url});
-  });
-});
+};
+chrome.contextMenus.onClicked.addListener(onClicked);
+chrome.browserAction.onClicked.addListener(tab => onClicked({
+  menuItemId: 'open-google',
+  pageUrl: tab.url
+}));
 
 // http manipulations
 chrome.webRequest.onHeadersReceived.addListener(details => {

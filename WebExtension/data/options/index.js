@@ -55,7 +55,6 @@ document.getElementById('save').addEventListener('click', () => {
 chrome.storage.onChanged.addListener(prefs => {
   const mouse = prefs['use-pointer'];
   if (mouse) {
-    console.log(mouse)
     if (mouse.newValue) {
       chrome.contextMenus.remove('open-panel');
     }
