@@ -55,7 +55,7 @@ var onClicked = (info, tab) => {
   if (info.menuItemId === 'open-panel') {
     chrome.tabs.sendMessage(tab.id, {
       method: 'open-panel',
-      phrase: info.selectionText
+      phrase: info.selectionText.trim()
     }, {
       frameId: info.frameId
     });
