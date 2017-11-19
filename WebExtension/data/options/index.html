@@ -37,6 +37,24 @@
       font-size: 90%;
       color: #555;
     }
+    th {
+      position: relative;
+      font-weight: normal;
+    }
+    th span {
+      padding: 2px 10px;
+      background-color: #eee;
+    }
+    th:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0.6em;
+      border-top: 1px dotted black;
+      z-index: -1;
+    }
   </style>
 </head>
 
@@ -73,28 +91,55 @@
   </p>
 
   <table width=100%>
-    <tr>
-      <td><input id="use-pointer" type="checkbox"></td>
-      <td>
-        <label for="use-pointer">Display word selection bubble<sup>5</sup></label>
-      </td>
-    </tr>
-    <tr>
-      <td><input id="google-page" type="checkbox"></td>
-      <td>
-        <label for="google-page">Add "Translate with Google" to the right-click menu over "page" and "links"</label>
-      </td>
-    </tr>
-    <tr>
-      <td><input id="bing-page" type="checkbox"></td>
-      <td>
-        <label for="bing-page">Add "Translate with Bing" to the right-click menu over "page" and "links"</label>
-      </td>
-    </tr>
-    <tr>
-      <td><input id="show" type="checkbox"></td>
-      <td>Open FAQs page on upgrade<sup>6</sup></td>
-    </tr>
+    <thead>
+      <tr>
+        <th colspan="2"><span>Bubble vs context menu</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="radio" id="use-pointer" name="selection"></td>
+        <td>
+          <label for="use-pointer">Display word selection bubble<sup>5</sup></label>
+        </td>
+      </tr>
+      <tr>
+        <td><input type="radio" id="use-selection" name="selection"></td>
+        <td>
+          <label for="use-selection">Add right-click item for text selection context<sup>5</sup></label>
+        </td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
+        <th colspan="2"><span>Page Translation (right-click menu)</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input id="google-page" type="checkbox"></td>
+        <td>
+          <label for="google-page">Add "Translate with Google" for "page" and "links" contexts</label>
+        </td>
+      </tr>
+      <tr>
+        <td><input id="bing-page" type="checkbox"></td>
+        <td>
+          <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
+        </td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
+        <th colspan="2"><span>Misc</span></th>
+      </tr>
+    </thead>
+    <table>
+      <tr>
+        <td><input id="show" type="checkbox"></td>
+        <td>Open FAQs page on updates<sup>6</sup></td>
+      </tr>
+    </table>
   </table>
 
   <p>

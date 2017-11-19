@@ -20,10 +20,15 @@ function restore() {
     document.getElementById('offset-x').value = prefs['offset-x'];
     document.getElementById('offset-y').value = prefs['offset-y'];
     document.getElementById('engine').selectedIndex = prefs.engine;
-    document.getElementById('use-pointer').checked = prefs['use-pointer'];
     document.getElementById('google-page').checked = prefs['google-page'];
     document.getElementById('bing-page').checked = prefs['bing-page'];
     document.getElementById('show').checked = prefs.show;
+    if (prefs['use-pointer']) {
+      document.getElementById('use-pointer').checked = true;
+    }
+    else {
+      document.getElementById('use-selection').checked = true;
+    }
   });
 }
 
