@@ -22,7 +22,10 @@ var panel = (function() {
         height = Math.max(height, prefs.mheight);
       }
       if (iframe) {
-        iframe.style.height = height + 'px';
+        iframe.style.height = Math.max(300, Math.min(
+          document.documentElement.clientHeight - parseInt(iframe.style.top) + document.documentElement.scrollTop - 10,
+          height
+        )) + 'px';
       }
     }
     else if (request.method === 'loaded') {
@@ -67,15 +70,15 @@ var panel = (function() {
       iframe.style.top = top + 'px';
       iframe.style.display = 'block';
       iframe.src = getURL(panel.phrase.substr(0, 2000));
-      /*iframe.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth'
-      });*/
+      // iframe.scrollIntoView({
+      //   block: 'start',
+      //   behavior: 'smooth'
+      // });
     },
     hide: function() {
       if (iframe) {
-        iframe.style.display = 'none';
-        iframe.style.height = '300px';
+        iframe.remove();
+        iframe = null;
       }
     },
     width: function() {

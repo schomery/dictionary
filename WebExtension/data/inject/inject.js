@@ -60,13 +60,17 @@ window.addEventListener('message', e => {
 
 // pointer
 var pointer = (function() {
-  let div, timer;
+  let div;
+  let timer;
   return {
     load: function() {
       div = Object.assign(document.createElement('div'), {
         'title': 'Google Translator Anywhere',
         'onanimationend': () => div.classList.remove('itanywhere-bounceIn'),
-        'onclick': post.show
+        'onclick': e => {
+          post.show(e);
+          mouse.restore();
+        }
       });
       div.classList.add('itanywhere-activator');
       document.documentElement.appendChild(div);
@@ -89,7 +93,7 @@ var pointer = (function() {
         display: 'block'
       });
       div.classList.add('itanywhere-bounceIn');
-      //hide pointer after 3 seconds
+      // hide pointer after 3 seconds
       window.clearTimeout(timer);
       timer = window.setTimeout(pointer.hide, 3000);
     },
@@ -104,10 +108,12 @@ var pointer = (function() {
 
 // mouse
 var mouse = (function() {
+  let range;
   function getSelection(e) {
     const selection = window.getSelection();
     const tmp = selection.toString();
     if (tmp) {
+      range = selection.getRangeAt(0);
       return tmp.trim();
     }
     const target = e.target;
@@ -158,11 +164,19 @@ var mouse = (function() {
         document.removeEventListener('keyup', click);
       }
       catch (e) {}
+    },
+    restore: function() {
+      if (range) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        range = null;
+      }
     }
   };
 })();
 
-//attach
+// attach
 var init = () => {
   document.removeEventListener('DOMContentLoaded', init);
   mouse.load();

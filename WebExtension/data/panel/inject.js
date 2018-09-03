@@ -1,6 +1,6 @@
 'use strict';
 
-if (window.top !== window) {  // only in frames
+if (window.top !== window) { // only in frames
   const link = document.createElement('link');
   link.setAttribute('rel', 'stylesheet');
   link.href = chrome.runtime.getURL('/data/panel/inject.css');
@@ -26,11 +26,13 @@ if (window.top !== window) {  // only in frames
   });
 
   const resize = () => {
-    const page = document.body || document.documentElement;
-    if (page) {
+    const source = document.querySelector('.tlid-source-target');
+    const result = document.querySelector('.tlid-result-view');
+
+    if (source && result) {
       chrome.runtime.sendMessage({
         method: 'resize',
-        height: page.getBoundingClientRect().height
+        height: source.getBoundingClientRect().height + result.getBoundingClientRect().height
       });
     }
   };
@@ -46,7 +48,9 @@ if (window.top !== window) {  // only in frames
   window.addEventListener('scroll', () => window.scrollTo(0, 0));
 
   document.addEventListener('DOMContentLoaded', function() {
-    // This is a must have for this extension. We need to resize the injected panel when DOM is modified. There is a timeout to prevent multiple actions.
+    // This is a must have for this extension. We need to resize the injected panel when DOM is modified. There is a
+    // timeout to prevent multiple actions.
+    window.addEventListener('resize', resize);
     const observer = new MutationObserver(() => {
       window.clearTimeout(id);
       id = window.setTimeout(resize, 500);
@@ -55,14 +59,15 @@ if (window.top !== window) {  // only in frames
       attributes: false,
       childList: true,
       characterData: false,
-      subtree: true,
+      subtree: true
     });
 
     // Remove loading animation
     chrome.runtime.sendMessage({
       method: 'loaded'
     });
-    // preventing panel from prompting alert or confirm; this needs to be injected to the unwrapped window object to let overwrite alert and confirm functions
+    // preventing panel from prompting alert or confirm; this needs to be injected to the unwrapped window object to
+    // let overwrite alert and confirm functions
     const script = document.createElement('script');
     script.textContent = 'window.alert = window.confirm = function() {return true;}';
     document.body.appendChild(script);
