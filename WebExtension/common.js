@@ -1,11 +1,11 @@
 'use strict';
 
-const isFirefox = /Firefox/.test(navigator.userAgent);
-
 /* bounce */
 chrome.runtime.onMessage.addListener((request, sender) => {
-  if (request.method === 'loaded' || request.method === 'resize') {
-    chrome.tabs.sendMessage(sender.tab.id, request);
+  if (request.method === 'loaded' || request.method === 'resize' || request.method === 'hide-panel') {
+    chrome.tabs.sendMessage(sender.tab.id, request, {
+      frameId: 0
+    });
   }
   else if (request.method === 'open') {
     chrome.tabs.create({
@@ -95,15 +95,13 @@ chrome.webRequest.onHeadersReceived.addListener(details => {
     }
   }
   return {responseHeaders};
-},
-  {
-    urls: [
-      '*://translate.google.com/*',
-      '*://translate.google.cn/*'
-    ],
-    types: ['sub_frame']
-  },
-  ['blocking', 'responseHeaders']
+}, {
+  urls: [
+    '*://translate.google.com/*',
+    '*://translate.google.cn/*'
+  ],
+  types: ['sub_frame']
+}, ['blocking', 'responseHeaders']
 );
 chrome.webRequest.onHeadersReceived.addListener(details => {
   const responseHeaders = details.responseHeaders;
@@ -112,41 +110,43 @@ chrome.webRequest.onHeadersReceived.addListener(details => {
     if (header === 'Content-Security-Policy' || header === 'content-security-policy') {
       responseHeaders[i].value = responseHeaders[i].value
         .replace(/frame-src\s*([^;]*);/, 'frame-src $1 translate.google.com translate.google.cn;');
-
-      if (isFirefox) {
-        responseHeaders[i].value = responseHeaders[i].value
-          .replace(/child-src\s*([^;]*);/, 'child-src $1 translate.google.com translate.google.cn;')
-          .replace(/default-src\s*([^;]*);/, 'default-src $1 translate.google.com translate.google.cn;')
-          .replace(/script-src\s*([^;]*);/, 'script-src $1 translate.google.com translate.google.cn;');
-      }
     }
   }
   return {responseHeaders};
-},
-  {
-    urls: ['<all_urls>'],
-    types: ['main_frame']
-  },
-  ['blocking', 'responseHeaders']
+}, {
+  urls: ['<all_urls>'],
+  types: ['main_frame']
+}, ['blocking', 'responseHeaders']
 );
 
 // FAQs & Feedback
-chrome.storage.local.get({
-  'version': null,
-  'faqs': true
-}, prefs => {
-  const version = chrome.runtime.getManifest().version;
-
-  if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
-    chrome.storage.local.set({version}, () => {
-      chrome.tabs.create({
-        url: 'http://add0n.com/dictionary.html?version=' + version +
-          '&type=' + (prefs.version ? ('upgrade&p=' + prefs.version) : 'install')
-      });
-    });
-  }
-});
-{
+chrome.runtime.onInstalled.addListener(() => {
   const {name, version} = chrome.runtime.getManifest();
-  chrome.runtime.setUninstallURL('http://add0n.com/feedback.html?name=' + name + '&version=' + version);
-}
+  const page = chrome.runtime.getManifest().homepage_url;
+  chrome.storage.local.get({
+    'version': null,
+    'faqs': true,
+    'last-update': 0
+  }, prefs => {
+    if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
+      const now = Date.now();
+      const doUpdate = (now - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
+      chrome.storage.local.set({
+        version,
+        'last-update': doUpdate ? Date.now() : prefs['last-update']
+      }, () => {
+        // do not display the FAQs page if last-update occurred less than 45 days ago.
+        if (doUpdate) {
+          const p = Boolean(prefs.version);
+          chrome.tabs.create({
+            url: page + '?version=' + version +
+              '&type=' + (p ? ('upgrade&p=' + prefs.version) : 'install'),
+            active: p === false
+          });
+        }
+      });
+    }
+  });
+  //
+  chrome.runtime.setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+});

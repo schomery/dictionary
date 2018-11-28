@@ -22,25 +22,3 @@ div[class=gp-footer] {
 .share-panel {
   display: none;
 }
-.itanywhere-link {
-  position: fixed;
-  bottom: 0;
-  background: #f1f1f1;
-  width: calc(100% - 10px);
-  padding: 5px;
-  display: flex;
-  font-size: 12px;
-  justify-content: flex-end;
-}
-.itanywhere-link>* {
-  padding-left: 5px;
-}
-.itanywhere-link a {
-  text-decoration: none;
-}
-.itanywhere-link a:link ,
-.itanywhere-link a:visited,
-.itanywhere-link a:hover,
-.itanywhere-link a:active {
-  color: #000;
-}

@@ -6,6 +6,7 @@ var isOpera = navigator.userAgent.indexOf('OPR') !== -1;
 function restore() {
   chrome.storage.local.get({
     'width': 400,
+    'mheight': 600,
     'scale': 1.0,
     'offset-x': isOpera ? 10 : 0,
     'offset-y': isOpera ? 20 : 0,
@@ -13,28 +14,33 @@ function restore() {
     'use-pointer': true,
     'google-page': true,
     'bing-page': false,
-    'show': true
+    'faqs': true,
+    'hash': '#auto/en'
   }, prefs => {
     document.getElementById('width').value = prefs.width;
+    document.getElementById('mheight').value = prefs.mheight;
     document.getElementById('scale').value = prefs.scale;
     document.getElementById('offset-x').value = prefs['offset-x'];
     document.getElementById('offset-y').value = prefs['offset-y'];
     document.getElementById('engine').selectedIndex = prefs.engine;
     document.getElementById('google-page').checked = prefs['google-page'];
     document.getElementById('bing-page').checked = prefs['bing-page'];
-    document.getElementById('show').checked = prefs.show;
+    document.getElementById('faqs').checked = prefs.faqs;
     if (prefs['use-pointer']) {
       document.getElementById('use-pointer').checked = true;
     }
     else {
       document.getElementById('use-selection').checked = true;
     }
+    document.getElementById('langFrom').value = prefs.hash.substr(1).split('/')[0];
+    document.getElementById('langTo').value = prefs.hash.substr(1).split('/')[1];
   });
 }
 
 function save() {
   const prefs = {
-    'width': Math.min(Math.max(Number(document.getElementById('width').value), 200), 600),
+    'width': Math.min(Math.max(Number(document.getElementById('width').value), 300), 2000),
+    'mheight': Number(document.getElementById('mheight').value),
     'scale': Math.min(Math.max(parseFloat(document.getElementById('scale').value), 0.5), 1.0),
     'offset-x': Number(document.getElementById('offset-x').value),
     'offset-y': Number(document.getElementById('offset-y').value),
@@ -42,7 +48,8 @@ function save() {
     'use-pointer': document.getElementById('use-pointer').checked,
     'google-page': document.getElementById('google-page').checked,
     'bing-page': document.getElementById('bing-page').checked,
-    'show': document.getElementById('show').checked
+    'faqs': document.getElementById('faqs').checked,
+    'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value
   };
 
   chrome.storage.local.set(prefs, () => {
@@ -105,5 +112,24 @@ chrome.storage.onChanged.addListener(prefs => {
     else {
       chrome.contextMenus.remove('open-bing');
     }
+  }
+});
+
+// support
+document.getElementById('support').addEventListener('click', () => chrome.tabs.create({
+  url: chrome.runtime.getManifest().homepage_url + '?rd=donate'
+}));
+// reset
+document.getElementById('reset').addEventListener('click', e => {
+  if (e.detail === 1) {
+    log.textContent = 'Double-click to reset!';
+    window.setTimeout(() => log.textContent = '', 750);
+  }
+  else {
+    localStorage.clear();
+    chrome.storage.local.clear(() => {
+      chrome.runtime.reload();
+      window.close();
+    });
   }
 });

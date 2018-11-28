@@ -1,10 +1,8 @@
+/* globals panel */
 'use strict';
 
 // http://www.w3schools.com/html/exercise.asp?filename=exercise_iframe2
 var post = {
-  hide: () => window.top.postMessage({
-    cmd: 'idanywhere-hide'
-  }, '*'),
   show: e => window.parent.postMessage({
     cmd: 'idanywhere-show',
     event: {
@@ -102,7 +100,7 @@ var pointer = (function() {
         div.style.display = 'none';
       }
     },
-    is: e => e.target === div
+    is: e => e.target === div || e.target.classList.contains('itanywhere-panel')
   };
 })();
 
@@ -111,18 +109,24 @@ var mouse = (function() {
   let range;
   function getSelection(e) {
     const selection = window.getSelection();
-    const tmp = selection.toString();
-    if (tmp) {
-      range = selection.getRangeAt(0);
-      return tmp.trim();
-    }
-    const target = e.target;
-    try { // input type button does not support selection
-      if (target.value && !isNaN(target.selectionStart) && !isNaN(target.selectionEnd)) {
-        return target.value.substring(target.selectionStart, target.selectionEnd).trim();
+    // Check to see if anything inside the e.target element is selected */
+    if (window.getSelection().containsNode(e.target, true)) {
+      const tmp = selection.toString();
+      if (tmp) {
+        range = selection.getRangeAt(0);
+        return tmp.trim();
       }
+      const target = e.target;
+      try { // input type button does not support selection
+        if (target.value && !isNaN(target.selectionStart) && !isNaN(target.selectionEnd)) {
+          return target.value.substring(target.selectionStart, target.selectionEnd).trim();
+        }
+      }
+      catch (e) {}
     }
-    catch (e) {}
+    else {
+      return '';
+    }
   }
   const click = (function() {
     let id;
@@ -147,7 +151,14 @@ var mouse = (function() {
           pointer.hide();
         }
         if (!pointer.is(e)) {
-          post.hide();
+          if (window.top === window) {
+            panel.hide();
+          }
+          else {
+            chrome.runtime.sendMessage({
+              method: 'hide-panel'
+            });
+          }
         }
       }, 100);
     };
