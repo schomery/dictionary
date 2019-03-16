@@ -361,15 +361,34 @@
     </tbody>
     <thead>
       <tr>
+        <th colspan="2"><span>Styling</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2">Frame element styling<sup>8</sup></td>
+      </tr>
+      <tr>
+        <td colspan="2"><textarea id="frame-styles" rows="4" placeholder="e.g.: div.itanywhere-panel {border: solid 1px red;}"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">Google Translate styling<sup>9</sup></td>
+      </tr>
+      <tr>
+        <td colspan="2"><textarea id="translate-styles" rows="4" placeholder="e.g.: body {background-color: red;}"></textarea></td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
         <th colspan="2"><span>Misc</span></th>
       </tr>
     </thead>
-    <table>
+    <tbody>
       <tr>
         <td><input id="faqs" type="checkbox"></td>
         <td>Open FAQs page on updates<sup>6</sup></td>
       </tr>
-    </table>
+    </tbody>
   </table>
 
   <p>
@@ -387,6 +406,8 @@
     <li>If this option is checked, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
     <li>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</li>
     <li>Maximum height of the panel. Use zero to disable this option</li>
+    <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
+    <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
   </ol>
 
   <script src="index.js"></script>

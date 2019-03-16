@@ -1,4 +1,3 @@
-/* globals panel */
 'use strict';
 
 // http://www.w3schools.com/html/exercise.asp?filename=exercise_iframe2

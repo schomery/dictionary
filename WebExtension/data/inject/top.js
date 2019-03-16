@@ -1,10 +1,11 @@
 'use strict';
 
 var prefs = {
-  engine: 0,
-  width: 400,
-  mheight: 600,
-  hash: '#auto/en'
+  'engine': 0,
+  'width': 400,
+  'mheight': 600,
+  'hash': '#auto/en',
+  'frame-styles': ''
 };
 
 function getURL(phrase) {
@@ -18,6 +19,7 @@ function getURL(phrase) {
 var panel = (function() {
   let iframe;
   let div;
+  let style;
   let resize = true;
   chrome.runtime.onMessage.addListener(request => {
     if (request.method === 'resize' && resize) {
@@ -27,9 +29,9 @@ var panel = (function() {
       }
       if (iframe) {
         div.style.height = Math.max(400, Math.min(
-            document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop)
-            - parseInt(div.style.top) - 60,
-            height
+          document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop)
+          - parseInt(div.style.top) - 60,
+          height
         )) + 'px';
       }
     }
@@ -55,7 +57,10 @@ var panel = (function() {
       iframe = Object.assign(document.createElement('iframe'), {
         src: 'about:blank'
       });
+      style = document.createElement('style');
+      style.textContent = prefs['frame-styles'];
 
+      div.appendChild(style);
       div.appendChild(iframe);
       document.body.appendChild(div);
     },
@@ -77,16 +82,13 @@ var panel = (function() {
       div.style.top = top + 'px';
       div.style.display = 'flex';
       iframe.src = getURL(panel.phrase.substr(0, 2000));
-      // iframe.scrollIntoView({
-      //   block: 'start',
-      //   behavior: 'smooth'
-      // });
     },
     hide: function() {
       if (iframe) {
         div.remove();
         iframe = null;
         div = null;
+        style = null;
       }
     },
     width: function() {

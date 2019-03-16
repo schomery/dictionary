@@ -15,7 +15,9 @@ function restore() {
     'google-page': true,
     'bing-page': false,
     'faqs': true,
-    'hash': '#auto/en'
+    'hash': '#auto/en',
+    'frame-styles': '',
+    'translate-styles': ''
   }, prefs => {
     document.getElementById('width').value = prefs.width;
     document.getElementById('mheight').value = prefs.mheight;
@@ -34,6 +36,8 @@ function restore() {
     }
     document.getElementById('langFrom').value = prefs.hash.substr(1).split('/')[0];
     document.getElementById('langTo').value = prefs.hash.substr(1).split('/')[1];
+    document.getElementById('frame-styles').value = prefs['frame-styles'];
+    document.getElementById('translate-styles').value = prefs['translate-styles'];
   });
 }
 
@@ -49,7 +53,9 @@ function save() {
     'google-page': document.getElementById('google-page').checked,
     'bing-page': document.getElementById('bing-page').checked,
     'faqs': document.getElementById('faqs').checked,
-    'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value
+    'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value,
+    'frame-styles': document.getElementById('frame-styles').value,
+    'translate-styles': document.getElementById('translate-styles').value
   };
 
   chrome.storage.local.set(prefs, () => {

@@ -45,12 +45,27 @@ if (window.top !== window) { // only in frames
       document.documentElement.style.width = `${1 / value * 100}%`;
     }
   };
+  // styling
+  const style = value => {
+    const e = style.e || document.createElement('style');
+    e.textContent = value;
+    console.log(e);
+    document.documentElement.appendChild(e);
+    style.e = e;
+  };
   chrome.storage.local.get({
-    scale: 1.0
-  }, prefs => scale(prefs.scale));
+    'scale': 1.0,
+    'translate-styles': ''
+  }, prefs => {
+    scale(prefs.scale);
+    style(prefs['translate-styles']);
+  });
   chrome.storage.onChanged.addListener(prefs => {
     if (prefs.scale) {
       scale(prefs.scale.newValue);
+    }
+    if (prefs['translate-styles']) {
+      style(prefs['translate-styles'],newValue);
     }
   });
 
