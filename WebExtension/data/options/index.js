@@ -10,7 +10,7 @@ function restore() {
     'scale': 1.0,
     'offset-x': isOpera ? 10 : 0,
     'offset-y': isOpera ? 20 : 0,
-    'engine': 0,
+    'domain': 'com',
     'use-pointer': true,
     'google-page': true,
     'bing-page': false,
@@ -24,7 +24,7 @@ function restore() {
     document.getElementById('scale').value = prefs.scale;
     document.getElementById('offset-x').value = prefs['offset-x'];
     document.getElementById('offset-y').value = prefs['offset-y'];
-    document.getElementById('engine').selectedIndex = prefs.engine;
+    document.getElementById('domain').value = prefs.domain;
     document.getElementById('google-page').checked = prefs['google-page'];
     document.getElementById('bing-page').checked = prefs['bing-page'];
     document.getElementById('faqs').checked = prefs.faqs;
@@ -48,7 +48,7 @@ function save() {
     'scale': Math.min(Math.max(parseFloat(document.getElementById('scale').value), 0.5), 1.0),
     'offset-x': Number(document.getElementById('offset-x').value),
     'offset-y': Number(document.getElementById('offset-y').value),
-    'engine': document.getElementById('engine').selectedIndex,
+    'domain': document.getElementById('domain').value,
     'use-pointer': document.getElementById('use-pointer').checked,
     'google-page': document.getElementById('google-page').checked,
     'bing-page': document.getElementById('bing-page').checked,

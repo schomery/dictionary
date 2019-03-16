@@ -45,8 +45,22 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
       // http manipulations
       chrome.webRequest.onHeadersReceived.addListener(cache[sender.tab.id], {
         urls: [
-          '*://translate.google.com/*',
-          '*://translate.google.cn/*'
+          '*://translate.google.com/m/*',
+          '*://translate.google.com.hk/m/*',
+          '*://translate.google.com.tr/m/*',
+          '*://translate.google.com.tw/m/*',
+          '*://translate.google.com.ua/m/*',
+          '*://translate.google.com.vn/m/*',
+          '*://translate.google.co.in/m/*',
+          '*://translate.google.co.jp/m/*',
+          '*://translate.google.co.kr/m/*',
+          '*://translate.google.co.uk/m/*',
+          '*://translate.google.cn/m/*',
+          '*://translate.google.de/m/*',
+          '*://translate.google.fr/m/*',
+          '*://translate.google.it/m/*',
+          '*://translate.google.pl/m/*',
+          '*://translate.google.ru/m/*'
         ],
         types: ['sub_frame'],
         tabId: sender.tab.id
@@ -108,7 +122,7 @@ var onClicked = (info, tab) => {
   }
   else {
     chrome.storage.local.get({
-      engine: 0,
+      domain: 'com',
       hash: '#auto/en'
     }, prefs => {
       const [sl, tl] = prefs.hash.replace('#', '').split('/');
@@ -116,7 +130,7 @@ var onClicked = (info, tab) => {
       if (link.startsWith('about:reader?url=')) {
         link = decodeURIComponent(link.replace('about:reader?url=', ''));
       }
-      let url = `https://translate.google.${prefs.engine === 1 ? 'cn' : 'com'}/translate` +
+      let url = `https://translate.google.${prefs.domain}/translate` +
         `?hl=en&sl=${sl}&tl=${tl}&u=${encodeURIComponent(link)}`;
       if (info.menuItemId === 'open-bing') {
         url = `http://www.microsofttranslator.com/bv.aspx?from=${sl}&to=${tl}&a=${encodeURIComponent(link)}`;

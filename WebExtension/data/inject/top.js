@@ -1,7 +1,7 @@
 'use strict';
 
 var prefs = {
-  'engine': 0,
+  'domain': 'com',
   'width': 400,
   'mheight': 600,
   'hash': '#auto/en',
@@ -9,7 +9,7 @@ var prefs = {
 };
 
 function getURL(phrase) {
-  const engine = String(prefs.engine) === '0' ? 'https://translate.google.com/' : 'https://translate.google.cn/';
+  const engine = 'https://translate.google.' + prefs.domain + '/';
   return chrome.runtime.getURL('/data/iframe/index.html?rd=') +
     encodeURIComponent(engine + 'm/translate' + prefs.hash + '/' + encodeURIComponent(phrase)) +
     '&phrase=' + encodeURIComponent(phrase);

@@ -49,7 +49,6 @@ if (window.top !== window) { // only in frames
   const style = value => {
     const e = style.e || document.createElement('style');
     e.textContent = value;
-    console.log(e);
     document.documentElement.appendChild(e);
     style.e = e;
   };
@@ -65,7 +64,7 @@ if (window.top !== window) { // only in frames
       scale(prefs.scale.newValue);
     }
     if (prefs['translate-styles']) {
-      style(prefs['translate-styles'],newValue);
+      style(prefs['translate-styles'].newValue);
     }
   });
 
