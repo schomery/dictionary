@@ -1,8 +1,3 @@
-body {
-  overflow: hidden;
-  background-color: transparent !important;
-  color: red;
-}
 div[class=gp-footer] {
   display: none;
 }
@@ -20,5 +15,8 @@ div[class=gp-footer] {
   box-shadow: none !important;
 }
 .share-panel {
+  display: none;
+}
+.feedback-link {
   display: none;
 }

@@ -9,7 +9,9 @@ var prefs = {
 
 function getURL(phrase) {
   const engine = String(prefs.engine) === '0' ? 'https://translate.google.com/' : 'https://translate.google.cn/';
-  return engine + 'm/translate' + prefs.hash + '/' + encodeURIComponent(phrase);
+  return chrome.runtime.getURL('/data/iframe/index.html?rd=') +
+    encodeURIComponent(engine + 'm/translate' + prefs.hash + '/' + encodeURIComponent(phrase)) +
+    '&phrase=' + encodeURIComponent(phrase);
 }
 
 // panel
@@ -24,18 +26,18 @@ var panel = (function() {
         height = Math.min(height, prefs.mheight);
       }
       if (iframe) {
-        div.style.height = Math.max(300, Math.min(
-            document.documentElement.clientHeight + document.documentElement.scrollTop
+        div.style.height = Math.max(400, Math.min(
+            document.documentElement.clientHeight + (document.documentElement.scrollTop || document.body.scrollTop)
             - parseInt(div.style.top) - 60,
             height
         )) + 'px';
       }
     }
-    else if (request.method === 'loaded') {
-      iframe.classList.remove('itanywhere-loading');
-    }
     else if (request.method === 'hide-panel') {
       panel.hide();
+    }
+    else if (request.method === 'disable-auto-resizing') {
+      resize = false;
     }
   });
   return {
@@ -46,47 +48,15 @@ var panel = (function() {
       }
     },
     load: function() {
-      iframe = Object.assign(document.createElement('iframe'), {
-        src: 'about:blank'
-      });
-      iframe.classList.add('itanywhere-loading');
       div = Object.assign(document.createElement('div'), {
         style: `width: ${prefs.width}px; height: 500px;`
       });
       div.classList.add('itanywhere-panel');
+      iframe = Object.assign(document.createElement('iframe'), {
+        src: 'about:blank'
+      });
+
       div.appendChild(iframe);
-
-      const tools = document.createElement('div');
-      tools.classList.add('itanywhere-link');
-      tools.appendChild(document.createTextNode('Open in:'));
-      const translate = document.createElement('a');
-      translate.textContent = 'Google Translate';
-      translate.href = '#';
-      translate.addEventListener('click', function() {
-        chrome.runtime.sendMessage({
-          method: 'open',
-          url: getURL(panel.phrase).replace('/m/', '/')
-        }, () => panel.hide());
-      });
-      const define = document.createElement('a');
-      define.textContent = 'Google Search';
-      define.href = '#';
-      define.addEventListener('click', function() {
-        chrome.runtime.sendMessage({
-          method: 'open',
-          url: 'https://www.google.com/search?q=define ' + encodeURIComponent(panel.phrase)
-        }, () => panel.hide());
-      });
-      tools.appendChild(translate);
-      tools.appendChild(define);
-      div.appendChild(tools);
-
-      div.addEventListener('mousedown', e => {
-        if (e.target === div) {
-          resize = false;
-        }
-      });
-
       document.body.appendChild(div);
     },
     show: function(e) {

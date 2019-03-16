@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body data-mode=loading>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #fbfbfb center center no-repeat ;
+      overflow: auto;
+      overscroll-behavior: contain;
+      font-family: "Helvetica Neue",Helvetica,sans-serif;
+      font-size: 13px;
+    }
+    body[data-mode=loading] {
+      background-image: url('/data/icons/loading.gif');
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .links {
+      padding: 5px;
+      display: flex;
+      font-size: 12px;
+      width: calc(100% - 30px);
+    }
+    .links>* {
+      padding-left: 5px;
+    }
+    .links a {
+      text-decoration: none;
+    }
+    .links a:link ,
+    .links a:visited,
+    .links a:hover,
+    .links a:active {
+      color: #000;
+    }
+  </style>
+  <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+  <div class="links">
+    Open in: <a href="#" data-cmd="open-translate">Google Translate</a>, <a href="#" data-cmd="open-search">Google Search</a>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
+
+
+

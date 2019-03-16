@@ -1,55 +1,101 @@
 'use strict';
 
-/* bounce */
-chrome.runtime.onMessage.addListener((request, sender) => {
-  if (request.method === 'loaded' || request.method === 'resize' || request.method === 'hide-panel') {
+var cache = {};
+var remove = tabId => {
+  if (cache[tabId]) {
+    chrome.webRequest.onHeadersReceived.removeListener(cache[tabId]);
+    delete cache[tabId];
+  }
+};
+chrome.runtime.onMessage.addListener((request, sender, response) => {
+  /* bounce */
+  if (request.method === 'resize' || request.method === 'hide-panel') {
     chrome.tabs.sendMessage(sender.tab.id, request, {
       frameId: 0
     });
+    if (request.method === 'hide-panel') {
+      remove(sender.tab.id);
+    }
   }
   else if (request.method === 'open') {
     chrome.tabs.create({
       url: request.url
     });
+    chrome.tabs.sendMessage(sender.tab.id, {
+      method: 'hide-panel'
+    }, {
+      frameId: 0
+    });
+  }
+  else if (request.method === 'install') {
+    if (cache[sender.tab.id]) {
+      return response();
+    }
+    else {
+      cache[sender.tab.id] = details => {
+        const responseHeaders = details.responseHeaders;
+        for (let i = responseHeaders.length - 1; i >= 0; --i) {
+          const header = responseHeaders[i].name.toLowerCase();
+          if (header === 'x-frame-options' || header === 'frame-options') {
+            responseHeaders.splice(i, 1);
+          }
+        }
+        return {responseHeaders};
+      };
+      // http manipulations
+      chrome.webRequest.onHeadersReceived.addListener(cache[sender.tab.id], {
+        urls: [
+          '*://translate.google.com/*',
+          '*://translate.google.cn/*'
+        ],
+        types: ['sub_frame'],
+        tabId: sender.tab.id
+      }, ['blocking', 'responseHeaders']);
+      window.setTimeout(() => response(), 100);
+
+      return true;
+    }
   }
 });
+chrome.tabs.onRemoved.addListener(remove);
 
 /* context menu */
-(callback => {
+{
+  const callback = () => {
+    chrome.storage.local.get({
+      'use-pointer': true,
+      'google-page': true,
+      'bing-page': false
+    }, prefs => {
+      if (prefs['use-pointer'] === false) {
+        chrome.contextMenus.create({
+          id: 'open-panel',
+          title: 'Translate Selection',
+          contexts: ['selection'],
+          documentUrlPatterns: ['*://*/*']
+        });
+      }
+      if (prefs['google-page']) {
+        chrome.contextMenus.create({
+          id: 'open-google',
+          title: 'Translate with Google',
+          contexts: ['page', 'link'],
+          documentUrlPatterns: ['*://*/*']
+        });
+      }
+      if (prefs['bing-page']) {
+        chrome.contextMenus.create({
+          id: 'open-bing',
+          title: 'Translate with Bing',
+          contexts: ['page', 'link'],
+          documentUrlPatterns: ['*://*/*']
+        });
+      }
+    });
+  };
   chrome.runtime.onInstalled.addListener(callback);
   chrome.runtime.onStartup.addListener(callback);
-})(() => {
-  chrome.storage.local.get({
-    'use-pointer': true,
-    'google-page': true,
-    'bing-page': false
-  }, prefs => {
-    if (prefs['use-pointer'] === false) {
-      chrome.contextMenus.create({
-        id: 'open-panel',
-        title: 'Translate Selection',
-        contexts: ['selection'],
-        documentUrlPatterns: ['*://*/*']
-      });
-    }
-    if (prefs['google-page']) {
-      chrome.contextMenus.create({
-        id: 'open-google',
-        title: 'Translate with Google',
-        contexts: ['page', 'link'],
-        documentUrlPatterns: ['*://*/*']
-      });
-    }
-    if (prefs['bing-page']) {
-      chrome.contextMenus.create({
-        id: 'open-bing',
-        title: 'Translate with Bing',
-        contexts: ['page', 'link'],
-        documentUrlPatterns: ['*://*/*']
-      });
-    }
-  });
-});
+}
 
 var onClicked = (info, tab) => {
   if (info.menuItemId === 'open-panel') {
@@ -85,68 +131,28 @@ chrome.browserAction.onClicked.addListener(tab => onClicked({
   pageUrl: tab.url
 }));
 
-// http manipulations
-chrome.webRequest.onHeadersReceived.addListener(details => {
-  const responseHeaders = details.responseHeaders;
-  for (let i = responseHeaders.length - 1; i >= 0; --i) {
-    const header = responseHeaders[i].name.toLowerCase();
-    if (header === 'x-frame-options' || header === 'frame-options') {
-      responseHeaders.splice(i, 1);
-    }
-  }
-  return {responseHeaders};
-}, {
-  urls: [
-    '*://translate.google.com/*',
-    '*://translate.google.cn/*'
-  ],
-  types: ['sub_frame']
-}, ['blocking', 'responseHeaders']
-);
-chrome.webRequest.onHeadersReceived.addListener(details => {
-  const responseHeaders = details.responseHeaders;
-  for (let i = responseHeaders.length - 1; i >= 0; --i) {
-    const header = responseHeaders[i].name;
-    if (header === 'Content-Security-Policy' || header === 'content-security-policy') {
-      responseHeaders[i].value = responseHeaders[i].value
-        .replace(/frame-src\s*([^;]*);/, 'frame-src $1 translate.google.com translate.google.cn;');
-    }
-  }
-  return {responseHeaders};
-}, {
-  urls: ['<all_urls>'],
-  types: ['main_frame']
-}, ['blocking', 'responseHeaders']
-);
-
-// FAQs & Feedback
-chrome.runtime.onInstalled.addListener(() => {
-  const {name, version} = chrome.runtime.getManifest();
-  const page = chrome.runtime.getManifest().homepage_url;
-  chrome.storage.local.get({
-    'version': null,
-    'faqs': true,
-    'last-update': 0
-  }, prefs => {
-    if (prefs.version ? (prefs.faqs && prefs.version !== version) : true) {
-      const now = Date.now();
-      const doUpdate = (now - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
-      chrome.storage.local.set({
-        version,
-        'last-update': doUpdate ? Date.now() : prefs['last-update']
-      }, () => {
-        // do not display the FAQs page if last-update occurred less than 45 days ago.
-        if (doUpdate) {
-          const p = Boolean(prefs.version);
+{
+  const {onInstalled, setUninstallURL, getManifest} = chrome.runtime;
+  const {name, version} = getManifest();
+  const page = getManifest().homepage_url;
+  onInstalled.addListener(({reason, previousVersion}) => {
+    chrome.storage.local.get({
+      'faqs': true,
+      'last-update': 0
+    }, prefs => {
+      if (reason === 'install' || (prefs.faqs && reason === 'update')) {
+        const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
+        if (doUpdate && previousVersion !== version) {
           chrome.tabs.create({
             url: page + '?version=' + version +
-              '&type=' + (p ? ('upgrade&p=' + prefs.version) : 'install'),
-            active: p === false
+              (previousVersion ? '&p=' + previousVersion : '') +
+              '&type=' + reason,
+            active: reason === 'install'
           });
+          chrome.storage.local.set({'last-update': Date.now()});
         }
-      });
-    }
+      }
+    });
   });
-  //
-  chrome.runtime.setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
-});
+  setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+}

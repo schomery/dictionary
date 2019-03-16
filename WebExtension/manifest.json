@@ -3,7 +3,7 @@
   "short_name": "idanywhere",
   "description": "Access to a floating multilingual Google™ Translate panel on any webpage",
   "author": "Jeremy Schomery",
-  "version": "0.3.8",
+  "version": "0.4.0",
   "manifest_version": 2,
   "permissions": [
     "storage",
@@ -14,6 +14,7 @@
     "<all_urls>"
   ],
   "web_accessible_resources": [
+    "data/iframe/index.html",
     "data/icons/activator.png",
     "data/icons/loading.gif",
     "data/panel/inject.css"

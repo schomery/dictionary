@@ -73,53 +73,26 @@
   display: none;
 }
 .itanywhere-panel {
+  background-color: #fbfbfb;
   position: absolute;
   z-index: 2147483647;
   border: solid 1px #bbbbbb;
   box-shadow: 2px 2px 10px #bbbbbb;
   display: none;
+  padding: 0 0 10px 0;
+  margin: 0;
+  border: none;
   resize: both;
   overflow: auto;
-  background-color: #fff;
-  padding: 0;
-  margin: 0;
-  flex-direction: column;
 }
 .itanywhere-panel iframe {
-  border: none;
-  background-color: #fff;
-  background-repeat: no-repeat;
-  background-position: center center;
   width: 100%;
   height: 100%;
-}
-.itanywhere-loading {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/data/icons/loading.gif');
-}
-.itanywhere-link {
-  padding: 5px;
-  display: flex;
-  font-size: 12px;
-  width: calc(100% - 30px);
-}
-.itanywhere-link>* {
-  padding-left: 5px;
-}
-.itanywhere-link a {
-  text-decoration: none;
-}
-.itanywhere-link a:link ,
-.itanywhere-link a:visited,
-.itanywhere-link a:hover,
-.itanywhere-link a:active {
-  color: #000;
+  border: none;
 }
 
 @-moz-document url-prefix() {
   .itanywhere-activator {
     background-image: url('moz-extension://__MSG_@@extension_id__/data/icons/activator.png');
-  }
-  .itanywhere-loading {
-    background-image: url('moz-extension://__MSG_@@extension_id__/data/icons/loading.gif');
   }
 }

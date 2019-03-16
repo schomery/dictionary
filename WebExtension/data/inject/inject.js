@@ -151,14 +151,9 @@ var mouse = (function() {
           pointer.hide();
         }
         if (!pointer.is(e)) {
-          if (window.top === window) {
-            panel.hide();
-          }
-          else {
-            chrome.runtime.sendMessage({
-              method: 'hide-panel'
-            });
-          }
+          chrome.runtime.sendMessage({
+            method: 'hide-panel'
+          });
         }
       }, 100);
     };
