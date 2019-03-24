@@ -3,7 +3,7 @@
   "short_name": "idanywhere",
   "description": "Access to a floating multilingual Google™ Translate panel on any webpage",
   "author": "Jeremy Schomery",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "manifest_version": 2,
   "permissions": [
     "storage",
@@ -29,29 +29,31 @@
       "16": "data/icons/16.png",
       "24": "data/icons/24.png",
       "32": "data/icons/32.png",
-      "64": "data/icons/64.png"
+      "48": "data/icons/48.png",
+      "64": "data/icons/64.png",
+      "128": "data/icons/128.png"
     }
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "exclude_matches": [
-        "*://translate.google.com/m/*",
-        "*://translate.google.com.hk/m/*",
-        "*://translate.google.com.tr/m/*",
-        "*://translate.google.com.tw/m/*",
-        "*://translate.google.com.ua/m/*",
-        "*://translate.google.com.vn/m/*",
-        "*://translate.google.co.in/m/*",
-        "*://translate.google.co.jp/m/*",
-        "*://translate.google.co.kr/m/*",
-        "*://translate.google.co.uk/m/*",
-        "*://translate.google.cn/m/*",
-        "*://translate.google.de/m/*",
-        "*://translate.google.fr/m/*",
-        "*://translate.google.it/m/*",
-        "*://translate.google.pl/m/*",
-        "*://translate.google.ru/m/*"
+        "*://translate.google.com/*",
+        "*://translate.google.com.hk/*",
+        "*://translate.google.com.tr/*",
+        "*://translate.google.com.tw/*",
+        "*://translate.google.com.ua/*",
+        "*://translate.google.com.vn/*",
+        "*://translate.google.co.in/*",
+        "*://translate.google.co.jp/*",
+        "*://translate.google.co.kr/*",
+        "*://translate.google.co.uk/*",
+        "*://translate.google.cn/*",
+        "*://translate.google.de/*",
+        "*://translate.google.fr/*",
+        "*://translate.google.it/*",
+        "*://translate.google.pl/*",
+        "*://translate.google.ru/*"
       ],
       "js": ["data/inject/inject.js"],
       "css": ["data/inject/inject.css"],
@@ -62,22 +64,22 @@
     {
       "matches": ["<all_urls>"],
       "exclude_matches": [
-        "*://translate.google.com/m/*",
-        "*://translate.google.com.hk/m/*",
-        "*://translate.google.com.tr/m/*",
-        "*://translate.google.com.tw/m/*",
-        "*://translate.google.com.ua/m/*",
-        "*://translate.google.com.vn/m/*",
-        "*://translate.google.co.in/m/*",
-        "*://translate.google.co.jp/m/*",
-        "*://translate.google.co.kr/m/*",
-        "*://translate.google.co.uk/m/*",
-        "*://translate.google.cn/m/*",
-        "*://translate.google.de/m/*",
-        "*://translate.google.fr/m/*",
-        "*://translate.google.it/m/*",
-        "*://translate.google.pl/m/*",
-        "*://translate.google.ru/m/*"
+        "*://translate.google.com/*",
+        "*://translate.google.com.hk/*",
+        "*://translate.google.com.tr/*",
+        "*://translate.google.com.tw/*",
+        "*://translate.google.com.ua/*",
+        "*://translate.google.com.vn/*",
+        "*://translate.google.co.in/*",
+        "*://translate.google.co.jp/*",
+        "*://translate.google.co.kr/*",
+        "*://translate.google.co.uk/*",
+        "*://translate.google.cn/*",
+        "*://translate.google.de/*",
+        "*://translate.google.fr/*",
+        "*://translate.google.it/*",
+        "*://translate.google.pl/*",
+        "*://translate.google.ru/*"
       ],
       "js": ["data/inject/top.js"],
       "run_at": "document_start",
@@ -85,22 +87,22 @@
     },
     {
       "matches": [
-        "*://translate.google.com/m/*",
-        "*://translate.google.com.hk/m/*",
-        "*://translate.google.com.tr/m/*",
-        "*://translate.google.com.tw/m/*",
-        "*://translate.google.com.ua/m/*",
-        "*://translate.google.com.vn/m/*",
-        "*://translate.google.co.in/m/*",
-        "*://translate.google.co.jp/m/*",
-        "*://translate.google.co.kr/m/*",
-        "*://translate.google.co.uk/m/*",
-        "*://translate.google.cn/m/*",
-        "*://translate.google.de/m/*",
-        "*://translate.google.fr/m/*",
-        "*://translate.google.it/m/*",
-        "*://translate.google.pl/m/*",
-        "*://translate.google.ru/m/*"
+        "*://translate.google.com/*",
+        "*://translate.google.com.hk/*",
+        "*://translate.google.com.tr/*",
+        "*://translate.google.com.tw/*",
+        "*://translate.google.com.ua/*",
+        "*://translate.google.com.vn/*",
+        "*://translate.google.co.in/*",
+        "*://translate.google.co.jp/*",
+        "*://translate.google.co.kr/*",
+        "*://translate.google.co.uk/*",
+        "*://translate.google.cn/*",
+        "*://translate.google.de/*",
+        "*://translate.google.fr/*",
+        "*://translate.google.it/*",
+        "*://translate.google.pl/*",
+        "*://translate.google.ru/*"
       ],
       "js": ["data/panel/inject.js"],
       "run_at": "document_start",
@@ -114,13 +116,16 @@
   "homepage_url": "http://add0n.com/dictionary.html",
   "icons": {
     "16": "data/icons/16.png",
+    "24": "data/icons/24.png",
+    "32": "data/icons/32.png",
     "48": "data/icons/48.png",
+    "64": "data/icons/64.png",
     "128": "data/icons/128.png"
   },
   "applications": {
     "gecko": {
       "id": "jid0-fbHwsGfb6kJyq2hj65KnbGte3yT@jetpack",
-      "strict_min_version": "52.0"
+      "strict_min_version": "57.0"
     }
   }
 }

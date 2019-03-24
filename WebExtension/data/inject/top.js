@@ -10,9 +10,9 @@ var prefs = {
 
 function getURL(phrase) {
   const engine = 'https://translate.google.' + prefs.domain + '/';
+  const [sl, tl] = prefs.hash.substr(1).split('/');
   return chrome.runtime.getURL('/data/iframe/index.html?rd=') +
-    encodeURIComponent(engine + 'm/translate' + prefs.hash + '/' + encodeURIComponent(phrase)) +
-    '&phrase=' + encodeURIComponent(phrase);
+    encodeURIComponent(engine + `#view=home&op=translate&sl=${sl}&tl=${tl}&text=${encodeURIComponent(phrase)}`);
 }
 
 // panel
