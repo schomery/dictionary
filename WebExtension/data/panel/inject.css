@@ -20,3 +20,7 @@ div[class=gp-footer] {
 .feedback-link {
   display: none;
 }
+
+body[data-hide-translation=true] .tlid-result {
+  display: none;
+}

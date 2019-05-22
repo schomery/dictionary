@@ -28,6 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+  // hide translation section
+  chrome.storage.local.get({
+    'hide-translator': 'Definitions of '
+  }, prefs => {
+    if (prefs['hide-translator'] && document.body.textContent.indexOf(prefs['hide-translator']) !== -1) {
+      document.body.dataset.hideTranslation = true;
+    }
+  });
 });
 
 if (window.top !== window) { // only in frames

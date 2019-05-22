@@ -19,7 +19,8 @@ function restore() {
     'faqs': true,
     'hash': '#auto/en',
     'frame-styles': '',
-    'translate-styles': ''
+    'translate-styles': '',
+    'hide-translator': 'Definitions of '
   }, prefs => {
     document.getElementById('width').value = prefs.width;
     document.getElementById('mheight').value = prefs.mheight;
@@ -32,6 +33,7 @@ function restore() {
     document.getElementById('reuse-page').checked = prefs['reuse-page'];
     document.getElementById('default-action').value = prefs['default-action'];
     document.getElementById('faqs').checked = prefs.faqs;
+    document.getElementById('hide-translator').value = prefs['hide-translator'];
     if (prefs['use-pointer']) {
       document.getElementById('use-pointer').checked = true;
     }
@@ -61,7 +63,8 @@ function save() {
     'faqs': document.getElementById('faqs').checked,
     'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value,
     'frame-styles': document.getElementById('frame-styles').value,
-    'translate-styles': document.getElementById('translate-styles').value
+    'translate-styles': document.getElementById('translate-styles').value,
+    'hide-translator': document.getElementById('hide-translator').value
   };
 
   chrome.storage.local.set(prefs, () => {

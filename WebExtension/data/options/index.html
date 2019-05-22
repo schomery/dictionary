@@ -341,6 +341,10 @@
         </select>
       </td>
     </tr>
+    <tr>
+      <td>Hide translation section<sup>11</sup>:</td>
+      <td align="right"><input id="hide-translator" type="text"></td>
+    </tr>
   </table>
 
   <table width=100%>
@@ -438,6 +442,7 @@
     <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
     <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
     <li>When translation page using browser-action click, use this engine for translation.</li>
+    <li>If the following phrase (e.g. "Definitions of ") is found in the translation page, the translator section will be hidden. This is useful to hide the translation section when the translator is used to define a word. To disable, clear the box and save the options.</li>
   </ol>
 
   <script src="index.js"></script>
