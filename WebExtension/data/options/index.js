@@ -14,6 +14,8 @@ function restore() {
     'use-pointer': true,
     'google-page': true,
     'bing-page': false,
+    'reuse-page': true,
+    'default-action': 'open-google',
     'faqs': true,
     'hash': '#auto/en',
     'frame-styles': '',
@@ -27,6 +29,8 @@ function restore() {
     document.getElementById('domain').value = prefs.domain;
     document.getElementById('google-page').checked = prefs['google-page'];
     document.getElementById('bing-page').checked = prefs['bing-page'];
+    document.getElementById('reuse-page').checked = prefs['reuse-page'];
+    document.getElementById('default-action').value = prefs['default-action'];
     document.getElementById('faqs').checked = prefs.faqs;
     if (prefs['use-pointer']) {
       document.getElementById('use-pointer').checked = true;
@@ -52,6 +56,8 @@ function save() {
     'use-pointer': document.getElementById('use-pointer').checked,
     'google-page': document.getElementById('google-page').checked,
     'bing-page': document.getElementById('bing-page').checked,
+    'reuse-page': document.getElementById('reuse-page').checked,
+    'default-action': document.getElementById('default-action').value,
     'faqs': document.getElementById('faqs').checked,
     'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value,
     'frame-styles': document.getElementById('frame-styles').value,

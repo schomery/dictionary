@@ -332,6 +332,15 @@
         </select>
       </td>
     </tr>
+    <tr>
+      <td>Browser-action button<sup>10</sup>:</td>
+      <td align="right">
+        <select id="default-action">
+          <option value="open-google">Use Google Translate</option>
+          <option value="open-bing">Use Bing Translate</option>
+        </select>
+      </td>
+    </tr>
   </table>
 
   <table width=100%>
@@ -370,6 +379,12 @@
         <td><input id="bing-page" type="checkbox"></td>
         <td>
           <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
+        </td>
+      </tr>
+      <tr>
+        <td><input id="reuse-page" type="checkbox"></td>
+        <td>
+          <label for="reuse-page">Redirect the page to the translated version when page translation is requested</label>
         </td>
       </tr>
     </tbody>
@@ -422,6 +437,7 @@
     <li>Maximum height of the panel. Use zero to disable this option</li>
     <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
     <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
+    <li>When translation page using browser-action click, use this engine for translation.</li>
   </ol>
 
   <script src="index.js"></script>

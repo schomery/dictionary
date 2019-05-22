@@ -122,8 +122,9 @@ var onClicked = (info, tab) => {
   }
   else {
     chrome.storage.local.get({
-      domain: 'com',
-      hash: '#auto/en'
+      'domain': 'com',
+      'hash': '#auto/en',
+      'reuse-page': true
     }, prefs => {
       const [sl, tl] = prefs.hash.replace('#', '').split('/');
       let link = info.linkUrl || info.pageUrl;
@@ -135,15 +136,26 @@ var onClicked = (info, tab) => {
       if (info.menuItemId === 'open-bing') {
         url = `http://www.microsofttranslator.com/bv.aspx?from=${sl}&to=${tl}&a=${encodeURIComponent(link)}`;
       }
-      chrome.tabs.create({url});
+      // when this is a page translation, offer redirection
+      if (!info.linkUrl && prefs['reuse-page']) {
+        chrome.tabs.update(tab.id, {url});
+      }
+      else {
+        chrome.tabs.create({
+          url,
+          index: tab.index + 1
+        });
+      }
     });
   }
 };
 chrome.contextMenus.onClicked.addListener(onClicked);
-chrome.browserAction.onClicked.addListener(tab => onClicked({
-  menuItemId: 'open-google',
+chrome.browserAction.onClicked.addListener(tab => chrome.storage.local.get({
+  'default-action': 'open-google'
+}, prefs => onClicked({
+  menuItemId: prefs['default-action'],
   pageUrl: tab.url
-}));
+}, tab)));
 
 {
   const {onInstalled, setUninstallURL, getManifest} = chrome.runtime;
