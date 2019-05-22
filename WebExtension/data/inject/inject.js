@@ -19,7 +19,8 @@ var isOpera = navigator.userAgent.indexOf('OPR') !== -1;
 var sprefs = { // do not get mixed with top.js
   'offset-x': isOpera ? 10 : 0,
   'offset-y': isOpera ? 20 : 0,
-  'use-pointer': true
+  'use-pointer': true,
+  'direct-frame': false
 };
 
 var ec;
@@ -133,6 +134,9 @@ var mouse = (function() {
       if (e.key && e.key.startsWith('Arrow')) {
         return;
       }
+      if (e.key && e.key === 'Alt') {
+        return;
+      }
       if (e.key && e.key.startsWith('Page')) {
         return;
       }
@@ -142,12 +146,23 @@ var mouse = (function() {
       window.clearTimeout(id);
       id = window.setTimeout(function() {
         const selected = getSelection(e);
-        if (selected && sprefs['use-pointer']) {
+        if (selected && sprefs['use-pointer'] && sprefs['direct-frame'] === false) {
           pointer.move(e.clientX + window.scrollX + 3, e.clientY + window.scrollY - 40);
           post.phrase(selected);
         }
         else {
           pointer.hide();
+        }
+        if (selected && e.altKey && sprefs['direct-frame']) {
+          post.phrase(selected);
+          window.setTimeout(() => {
+            post.show(e);
+            mouse.restore();
+          });
+        }
+
+        if (e.type === 'mouseup' && e.altKey) {
+          return;
         }
         if (!pointer.is(e)) {
           chrome.runtime.sendMessage({

@@ -363,7 +363,13 @@
       <tr>
         <td><input type="radio" id="use-selection" name="selection"></td>
         <td>
-          <label for="use-selection">Add right-click item for text selection context<sup>5</sup></label>
+          <label for="use-selection">Add right-click item for text selection context</label>
+        </td>
+      </tr>
+      <tr>
+        <td><input type="radio" id="use-direct" name="selection"></td>
+        <td>
+          <label for="use-direct">Press Alt/Option key, then select a text to directly display the translation window</label>
         </td>
       </tr>
     </tbody>
@@ -436,13 +442,14 @@
     <li>This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.</li>
     <li>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</li>
     <li>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</li>
-    <li>If this option is checked, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
+    <li>If this option is selected, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
     <li>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</li>
     <li>Maximum height of the panel. Use zero to disable this option</li>
     <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
     <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
     <li>When translation page using browser-action click, use this engine for translation.</li>
     <li>If there is a "Definitions of  %s" section, hide the translation section. This is useful to hide the translation section when Google Translator is used for exploring words definition.</li>
+    <li>If this option is selected, the extension directly opens the translation window when alt key is hold while double-clicking on a word to select it or when alt key is hold while selecting a sentence.</li>
   </ol>
 
   <script src="index.js"></script>

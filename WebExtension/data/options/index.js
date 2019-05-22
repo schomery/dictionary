@@ -12,6 +12,7 @@ function restore() {
     'offset-y': isOpera ? 20 : 0,
     'domain': 'com',
     'use-pointer': true,
+    'direct-frame': false,
     'google-page': true,
     'bing-page': false,
     'reuse-page': true,
@@ -34,8 +35,11 @@ function restore() {
     document.getElementById('default-action').value = prefs['default-action'];
     document.getElementById('faqs').checked = prefs.faqs;
     document.getElementById('hide-translator').checked = prefs['hide-translator'];
-    if (prefs['use-pointer']) {
+    if (prefs['use-pointer'] && prefs['direct-frame'] === false) {
       document.getElementById('use-pointer').checked = true;
+    }
+    else if (prefs['direct-frame']) {
+      document.getElementById('use-direct').checked = true;
     }
     else {
       document.getElementById('use-selection').checked = true;
@@ -56,6 +60,7 @@ function save() {
     'offset-y': Number(document.getElementById('offset-y').value),
     'domain': document.getElementById('domain').value,
     'use-pointer': document.getElementById('use-pointer').checked,
+    'direct-frame': document.getElementById('use-direct').checked,
     'google-page': document.getElementById('google-page').checked,
     'bing-page': document.getElementById('bing-page').checked,
     'reuse-page': document.getElementById('reuse-page').checked,
