@@ -28,14 +28,24 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
-  // hide translation section
-  chrome.storage.local.get({
-    'hide-translator': 'Definitions of '
-  }, prefs => {
-    if (prefs['hide-translator'] && document.body.textContent.indexOf(prefs['hide-translator']) !== -1) {
-      document.body.dataset.hideTranslation = true;
-    }
-  });
+  // hide translation section if definition section is not empty
+  const define = document.querySelector('.gt-cd-mmd .gt-cd-c');
+  if (define) {
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      chrome.storage.local.get({
+        'hide-translator': true
+      }, prefs => {
+        if (prefs['hide-translator']) {
+          document.body.dataset.hideTranslation = true;
+        }
+      });
+    });
+    observer.observe(define, {
+      subtree: true,
+      childList: true
+    });
+  }
 });
 
 if (window.top !== window) { // only in frames

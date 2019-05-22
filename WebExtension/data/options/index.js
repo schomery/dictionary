@@ -20,7 +20,7 @@ function restore() {
     'hash': '#auto/en',
     'frame-styles': '',
     'translate-styles': '',
-    'hide-translator': 'Definitions of '
+    'hide-translator': true
   }, prefs => {
     document.getElementById('width').value = prefs.width;
     document.getElementById('mheight').value = prefs.mheight;
@@ -33,7 +33,7 @@ function restore() {
     document.getElementById('reuse-page').checked = prefs['reuse-page'];
     document.getElementById('default-action').value = prefs['default-action'];
     document.getElementById('faqs').checked = prefs.faqs;
-    document.getElementById('hide-translator').value = prefs['hide-translator'];
+    document.getElementById('hide-translator').checked = prefs['hide-translator'];
     if (prefs['use-pointer']) {
       document.getElementById('use-pointer').checked = true;
     }
@@ -43,7 +43,7 @@ function restore() {
     document.getElementById('langFrom').value = prefs.hash.substr(1).split('/')[0];
     document.getElementById('langTo').value = prefs.hash.substr(1).split('/')[1];
     document.getElementById('frame-styles').value = prefs['frame-styles'];
-    document.getElementById('translate-styles').value = prefs['translate-styles'];
+    document.getElementById('translate-styles').checked = prefs['translate-styles'];
   });
 }
 
@@ -64,7 +64,7 @@ function save() {
     'hash': '#' + document.getElementById('langFrom').value + '/' + document.getElementById('langTo').value,
     'frame-styles': document.getElementById('frame-styles').value,
     'translate-styles': document.getElementById('translate-styles').value,
-    'hide-translator': document.getElementById('hide-translator').value
+    'hide-translator': document.getElementById('hide-translator').checked
   };
 
   chrome.storage.local.set(prefs, () => {
