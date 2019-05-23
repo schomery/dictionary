@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Options Page :: Dictionary Anywhere</title>
+  <meta charset="utf-8">
   <style>
     body {
       padding: 10px;
@@ -57,6 +58,9 @@
       height: 0.6em;
       border-top: 1px dotted black;
       z-index: -1;
+    }
+    #explore:not([data-loaded=true]) {
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -430,6 +434,7 @@
     </tbody>
   </table>
 
+  <div id="explore" data-cols=4></div>
   <p>
     <button id="reset">Reset</button>
     <button id="support">Support Development</button>&nbsp;-&nbsp;<button id="save">Save</button>
@@ -453,5 +458,6 @@
   </ol>
 
   <script src="index.js"></script>
+  <script async src="matched.js"></script>
 </body>
 </html>
