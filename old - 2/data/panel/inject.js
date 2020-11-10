@@ -141,7 +141,14 @@ if (window.top !== window) { // only in frames
     // preventing panel from prompting alert or confirm; this needs to be injected to the unwrapped window object to
     // let overwrite alert and confirm functions
     const script = document.createElement('script');
-    script.textContent = 'window.alert = window.confirm = function() {return true;}';
+    script.textContent = `
+      window.alert = window.confirm = function() {
+        return true;
+      };
+      console.log(123);
+
+    `;
     document.body.appendChild(script);
   });
+  console.log(123);
 }

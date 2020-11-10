@@ -10,6 +10,7 @@ chrome.runtime.sendMessage({
     document.body.dataset.mode = 'ready';
   });
   iframe.src = args.get('rd');
+  // iframe.src = 'https://translate.google.com/m?sl=auto&tl=da&q=book&hl=en';
 
   // disable resizing
   document.addEventListener('click', e => {

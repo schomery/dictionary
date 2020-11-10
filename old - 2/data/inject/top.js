@@ -12,7 +12,7 @@ function getURL(phrase) {
   const engine = 'https://translate.google.' + prefs.domain + '/';
   const [sl, tl] = prefs.hash.substr(1).split('/');
   return chrome.runtime.getURL('/data/iframe/index.html?rd=') +
-    encodeURIComponent(engine + `#view=home&op=translate&sl=${sl}&tl=${tl}&text=${encodeURIComponent(phrase)}`);
+    encodeURIComponent(engine + `?sl=${sl}&tl=${tl}&q=${encodeURIComponent(phrase)}`);
 }
 
 // panel
