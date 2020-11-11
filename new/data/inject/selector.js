@@ -13,7 +13,7 @@ const key = {
 
 const pointer = {
   delay: 300, // ms
-  timeout: 3000, // ms
+  timeout: 5000, // ms
   'lazy-show'(o) {
     clearTimeout(pointer.id);
     pointer.id = setTimeout(pointer.show, pointer.delay, o);
@@ -22,6 +22,8 @@ const pointer = {
     pointer.hide();
 
     const div = pointer.div = document.createElement('div');
+    div.title = `Click to open Google Translate
+Ctrl/Meta + Click to open permanent Google Translate`;
     chrome.storage.local.get({
       'offset-x': 0,
       'offset-y': 0
@@ -37,9 +39,10 @@ const pointer = {
         div.style.top = (position.y - 25 + prefs['offset-y']) + 'px';
       }
       div.classList.add('itanywhere-activator');
-      div.onclick = () => chrome.runtime.sendMessage({
+      div.onclick = e => chrome.runtime.sendMessage({
         method: 'open-translator',
-        query: o.value
+        query: o.value,
+        permanent: e.shiftkey || e.ctrlKey || e.metaKey
       });
       document.body.appendChild(div);
       clearTimeout(pointer.rid);

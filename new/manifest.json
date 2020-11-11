@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "version": "0.5.0",
-  "name": "Dictionary Anywhere - Access Google™ Translate",
+  "version": "0.5.1",
+  "name": "Popup View for Google™ Translate",
   "description": "Access to a floating multilingual Google™ Translate popup on any webpage",
   "homepage_url": "https://add0n.com/dictionary.html",
   "permissions": [

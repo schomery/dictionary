@@ -1,6 +1,6 @@
 'use strict';
 
-const open = (tab, query, frameId) => chrome.tabs.executeScript({
+const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScript({
   frameId,
   code: `({
     position: typeof position === 'undefined' ? null : position
@@ -44,6 +44,7 @@ const open = (tab, query, frameId) => chrome.tabs.executeScript({
         //     top: parseInt(position.sy)
         //   });
         // }
+        prefs.permanent = permanent;
         open.ids[w.tabs[0].id] = prefs;
       });
     });
@@ -52,8 +53,9 @@ const open = (tab, query, frameId) => chrome.tabs.executeScript({
 open.ids = {};
 
 const onMessage = (request, sender, response) => {
+  console.log(request);
   if (request.method === 'open-translator') {
-    open(sender.tab, request.query, sender.frameId);
+    open(sender.tab, request.query, sender.frameId, request.permanent);
   }
   else if (request.method === 'close') {
     chrome.tabs.remove(sender.tab.id);
@@ -77,7 +79,6 @@ const onClicked = (info, tab) => {
       'reuse-page': true
     }, prefs => {
       let link = info.linkUrl || info.pageUrl;
-      console.log(info);
       if (link.startsWith('about:reader?url=')) {
         link = decodeURIComponent(link.replace('about:reader?url=', ''));
       }
@@ -146,3 +147,30 @@ chrome.browserAction.onClicked.addListener(tab => chrome.storage.local.get({
   menuItemId: prefs['default-action'],
   pageUrl: tab.url
 }, tab)));
+
+/* FAQs & Feedback */
+{
+  const {management, runtime: {onInstalled, setUninstallURL, getManifest}, storage, tabs} = chrome;
+  if (navigator.webdriver !== true) {
+    const page = getManifest().homepage_url;
+    const {name, version} = getManifest();
+    onInstalled.addListener(({reason, previousVersion}) => {
+      management.getSelf(({installType}) => installType === 'normal' && storage.local.get({
+        'faqs': true,
+        'last-update': 0
+      }, prefs => {
+        if (reason === 'install' || (prefs.faqs && reason === 'update')) {
+          const doUpdate = (Date.now() - prefs['last-update']) / 1000 / 60 / 60 / 24 > 45;
+          if (doUpdate && previousVersion !== version) {
+            tabs.create({
+              url: page + '?version=' + version + (previousVersion ? '&p=' + previousVersion : '') + '&type=' + reason,
+              active: reason === 'install'
+            });
+            storage.local.set({'last-update': Date.now()});
+          }
+        }
+      }));
+    });
+    setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
+  }
+}
