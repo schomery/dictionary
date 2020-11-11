@@ -18,4 +18,12 @@ chrome.runtime.sendMessage({
     document.documentElement.style['transform-origin'] = '0 0';
     document.documentElement.style.width = `${1 / prefs.scale * 100}%`;
   }
+
+  window.addEventListener('keyup', e => {
+    if (e.code === 'Escape') {
+      chrome.runtime.sendMessage({
+        method: 'close'
+      });
+    }
+  });
 });
