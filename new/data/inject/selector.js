@@ -12,7 +12,7 @@ const key = {
 };
 
 const pointer = {
-  delay: 300, // ms
+  delay: 500, // ms
   timeout: 5000, // ms
   'lazy-show'(o) {
     clearTimeout(pointer.id);
@@ -28,7 +28,8 @@ Ctrl/Meta + Click to open permanent Google Translate`;
       'offset-x': 0,
       'offset-y': 0
     }, prefs => {
-      const range = o.selection.getRangeAt(0);
+      const {selection, query} = o;
+      const range = selection.getRangeAt(0);
       const rect = [...range.getClientRects()].pop();
       if (rect) {
         div.style.left = (rect.right - 25 + prefs['offset-y']) + 'px';
@@ -39,11 +40,13 @@ Ctrl/Meta + Click to open permanent Google Translate`;
         div.style.top = (position.y - 25 + prefs['offset-y']) + 'px';
       }
       div.classList.add('itanywhere-activator');
-      div.onclick = e => chrome.runtime.sendMessage({
-        method: 'open-translator',
-        query: o.value,
-        permanent: e.shiftkey || e.ctrlKey || e.metaKey
-      });
+      div.onclick = e => {
+        chrome.runtime.sendMessage({
+          method: 'open-translator',
+          query,
+          permanent: e.shiftkey || e.ctrlKey || e.metaKey
+        });
+      };
       document.body.appendChild(div);
       clearTimeout(pointer.rid);
       pointer.rid = setTimeout(pointer.hide, pointer.timeout);
@@ -62,13 +65,13 @@ function select() {
 
   return {
     selection,
-    value: selection.toString().trim()
+    query: selection.toString().trim()
   };
 }
 
 document.addEventListener('selectionchange', () => {
   const o = select();
-  if (o.value) {
+  if (o.query) {
     chrome.storage.local.get({
       'use-pointer': true,
       'direct-frame': false
@@ -86,10 +89,11 @@ document.addEventListener('selectionchange', () => {
     });
   }
   else {
-    // hide with delay to let the div accept click event
-    setTimeout(pointer.hide, 100);
+    clearTimeout(pointer.rid);
+    pointer.rid = setTimeout(pointer.hide, 100);
   }
 });
+document.addEventListener('click', e => console.log(e.target));
 
 document.addEventListener('mousedown', e => {
   position.x = e.clientX;

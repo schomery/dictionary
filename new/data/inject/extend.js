@@ -1,6 +1,10 @@
 chrome.runtime.sendMessage({
   method: 'extend'
 }, prefs => {
+  if (!prefs) {
+    return;
+  }
+  console.log(prefs);
   if (prefs.permanent !== true) {
     window.addEventListener('blur', () => chrome.runtime.sendMessage({
       method: 'close'

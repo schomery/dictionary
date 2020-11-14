@@ -53,7 +53,6 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
 open.ids = {};
 
 const onMessage = (request, sender, response) => {
-  console.log(request);
   if (request.method === 'open-translator') {
     open(sender.tab, request.query, sender.frameId, request.permanent);
   }
