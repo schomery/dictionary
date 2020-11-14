@@ -1,12 +1,13 @@
 .itanywhere-activator {
   all: revert;
-  position: fixed;
+  position: absolute;
   width: 25px;
   height: 25px;
   border-radius: 50%;
   z-index: 2147483647;
   background: rgba(0, 0, 255, 0.2) center center no-repeat;
   background-image: url('chrome-extension://__MSG_@@extension_id__/data/inject/selector.png');
+  background-size: 18px 18px;
   cursor: pointer;
   animation-duration: 0.5s;
   animation-fill-mode: both;

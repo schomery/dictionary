@@ -1,15 +1,8 @@
 'use strict';
 
-const position = {
-  x: 0,
-  y: 0,
-  sx: 0,
-  sy: 0
-};
+const position = {x: 0, y: 0, sx: 0, sy: 0};
 
-const key = {
-  altKey: false
-};
+const key = {altKey: false};
 
 const pointer = {
   delay: 500, // ms
@@ -32,8 +25,8 @@ Ctrl/Meta + Click to open permanent Google Translate`;
       const range = selection.getRangeAt(0);
       const rect = [...range.getClientRects()].pop();
       if (rect) {
-        div.style.left = (rect.right - 25 + prefs['offset-y']) + 'px';
-        div.style.top = (rect.top - 25 + prefs['offset-x']) + 'px';
+        div.style.left = (document.documentElement.scrollLeft + rect.right - 25 + prefs['offset-y']) + 'px';
+        div.style.top = (document.documentElement.scrollTop + rect.top - 25 + prefs['offset-x']) + 'px';
       }
       else {
         div.style.left = (position.x - 25 + prefs['offset-x']) + 'px';
@@ -47,7 +40,7 @@ Ctrl/Meta + Click to open permanent Google Translate`;
           permanent: e.shiftkey || e.ctrlKey || e.metaKey
         });
       };
-      document.body.appendChild(div);
+      document.documentElement.appendChild(div);
       clearTimeout(pointer.rid);
       pointer.rid = setTimeout(pointer.hide, pointer.timeout);
     });
@@ -100,11 +93,5 @@ document.addEventListener('mousedown', e => {
   position.sx = e.screenX;
   position.sy = e.screenY;
 });
-document.addEventListener('keydown', e => {
-  key.altKey = e.altKey;
-});
-document.addEventListener('keyup', () => {
-  key.altKey = false;
-});
-
-window.addEventListener('scroll', () => pointer.hide());
+document.addEventListener('keydown', e => key.altKey = e.altKey);
+document.addEventListener('keyup', () => key.altKey = false);
