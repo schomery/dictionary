@@ -90,10 +90,9 @@ document.addEventListener('selectionchange', () => {
   }
   else {
     clearTimeout(pointer.rid);
-    pointer.rid = setTimeout(pointer.hide, 100);
+    pointer.rid = setTimeout(pointer.hide, 200);
   }
 });
-document.addEventListener('click', e => console.log(e.target));
 
 document.addEventListener('mousedown', e => {
   position.x = e.clientX;
