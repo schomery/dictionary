@@ -38,12 +38,12 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
         height: parseInt(prefs.mheight),
         type: 'popup'
       }, w => {
-        // if (/Firefox/.test(navigator.userAgent)) {
-        //   chrome.windows.update(w.id, {
-        //     left: parseInt(position.sx),
-        //     top: parseInt(position.sy)
-        //   });
-        // }
+        if (/Firefox/.test(navigator.userAgent)) {
+          chrome.windows.update(w.id, {
+            left: parseInt(position.sx),
+            top: parseInt(position.sy)
+          });
+        }
         prefs.permanent = permanent;
         open.ids[w.tabs[0].id] = prefs;
       });
