@@ -1,0 +1,90 @@
+{
+  "manifest_version": 3,
+  "version": "0.6.0",
+  "name": "Popup View for Google™ Translate",
+  "description": "Access to a floating multilingual Google™ Translate popup on any webpage",
+  "homepage_url": "https://add0n.com/dictionary.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "icons": {
+    "16": "data/icons/16.png",
+    "32": "data/icons/32.png",
+    "48": "data/icons/48.png",
+    "64": "data/icons/64.png",
+    "128": "data/icons/128.png",
+    "256": "data/icons/256.png",
+    "512": "data/icons/512.png"
+  },
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "action": {},
+  "content_scripts": [{
+    "matches": ["*://*/*"],
+    "exclude_matches": [
+      "*://translate.google.com/*",
+      "*://translate.google.com.hk/*",
+      "*://translate.google.com.tr/*",
+      "*://translate.google.com.tw/*",
+      "*://translate.google.com.ua/*",
+      "*://translate.google.com.as/*",
+      "*://translate.google.com.vn/*",
+      "*://translate.google.co.in/*",
+      "*://translate.google.co.jp/*",
+      "*://translate.google.co.kr/*",
+      "*://translate.google.co.uk/*",
+      "*://translate.google.cn/*",
+      "*://translate.google.de/*",
+      "*://translate.google.fr/*",
+      "*://translate.google.it/*",
+      "*://translate.google.pl/*",
+      "*://translate.google.ru/*"
+    ],
+    "js": ["data/inject/selector.js"],
+    "css": ["data/inject/selector.css"],
+    "run_at": "document_start",
+    "all_frames": true,
+    "match_about_blank": true
+  }, {
+    "matches": [
+      "*://translate.google.com/*",
+      "*://translate.google.com.hk/*",
+      "*://translate.google.com.tr/*",
+      "*://translate.google.com.tw/*",
+      "*://translate.google.com.ua/*",
+      "*://translate.google.com.as/*",
+      "*://translate.google.com.vn/*",
+      "*://translate.google.co.in/*",
+      "*://translate.google.co.jp/*",
+      "*://translate.google.co.kr/*",
+      "*://translate.google.co.uk/*",
+      "*://translate.google.cn/*",
+      "*://translate.google.de/*",
+      "*://translate.google.fr/*",
+      "*://translate.google.it/*",
+      "*://translate.google.pl/*",
+      "*://translate.google.ru/*"
+    ],
+    "js": ["data/inject/extend.js"],
+    "run_at": "document_start"
+  }],
+  "options_ui": {
+    "page": "data/options/index.html"
+  },
+  "web_accessible_resources": [{
+      "resources": ["data/inject/selector.png"],
+      "matches": ["*://*/*"]
+  }],
+  "commands": {
+    "_execute_action": {
+      "description": "Press the action button"
+    }
+  }
+}

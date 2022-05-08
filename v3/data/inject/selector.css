@@ -1,0 +1,49 @@
+.itanywhere-activator {
+  all: revert;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  z-index: 2147483647;
+  background: rgba(0, 0, 255, 0.2) center center no-repeat;
+  background-image: url('chrome-extension://__MSG_@@extension_id__/data/inject/selector.png');
+  background-size: 18px 18px;
+  cursor: pointer;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-name: itanywhere-bounceIn;
+}
+@supports (-moz-appearance:none) {
+  .itanywhere-activator {
+    background-image: url('moz-extension://__MSG_@@extension_id__/data/inject/selector.png');
+  }
+}
+
+@keyframes itanywhere-bounceIn {
+  0%, 20%, 40%, 60%, 80%, 100% {
+    transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+  0% {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+  20% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    transform: scale3d(.9, .9, .9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    transform: scale3d(.97, .97, .97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+

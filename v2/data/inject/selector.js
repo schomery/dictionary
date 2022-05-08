@@ -86,6 +86,9 @@ document.addEventListener('selectionchange', () => {
     pointer.rid = setTimeout(pointer.hide, 200);
   }
 });
+window.addEventListener('hashchange', () => {
+  pointer.hide();
+}, false);
 
 document.addEventListener('mousedown', e => {
   position.x = e.clientX;
