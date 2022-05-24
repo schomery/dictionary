@@ -20,7 +20,6 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
     'google-extra': '',
     'domain': 'com'
   }, prefs => {
-    console.log('prefs', prefs);
     chrome.windows.get(tab.windowId, async (win) => {
       if (a[0].position) {
         Object.assign(position, a[0].position);
