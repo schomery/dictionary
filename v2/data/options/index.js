@@ -9,6 +9,7 @@ function restore() {
     'scale': 1.0,
     'offset-x': 0,
     'offset-y': 0,
+    'force-inside': true,
     'domain': 'com',
     'use-pointer': true,
     'direct-frame': false,
@@ -27,6 +28,7 @@ function restore() {
     document.getElementById('scale').value = prefs.scale;
     document.getElementById('offset-x').value = prefs['offset-x'];
     document.getElementById('offset-y').value = prefs['offset-y'];
+    document.getElementById('force-inside').checked = prefs['force-inside'];
     document.getElementById('domain').value = prefs.domain;
     document.getElementById('google-page').checked = prefs['google-page'];
     document.getElementById('bing-page').checked = prefs['bing-page'];
@@ -56,6 +58,7 @@ function save() {
     'scale': Math.min(Math.max(parseFloat(document.getElementById('scale').value), 0.5), 1.0),
     'offset-x': Number(document.getElementById('offset-x').value),
     'offset-y': Number(document.getElementById('offset-y').value),
+    'force-inside': document.getElementById('force-inside').checked,
     'domain': document.getElementById('domain').value,
     'use-pointer': document.getElementById('use-pointer').checked,
     'direct-frame': document.getElementById('use-direct').checked,

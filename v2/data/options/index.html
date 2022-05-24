@@ -83,6 +83,10 @@
       <td align="right"><input id="offset-y" type="number"></td>
     </tr>
     <tr>
+      <td><label style="display: inline-block;" for="force-inside">Always render pop-up inside the current window</label><sup>13</sup>:</td>
+      <td align="right"><input id="force-inside" type="checkbox"></td>
+    </tr>
+    <tr>
       <td>Translator's engine:</td>
       <td align="right">
         <select id="domain">
@@ -226,6 +230,7 @@
     <li>When translation page using browser-action click, use this engine for translation.</li>
     <li>If there is a "Definitions of  %s" section, hide the translation section. This is useful to hide the translation section when Google Translator is used for exploring words definition.</li>
     <li>If this option is selected, the extension directly opens the translation window when alt key is hold while double-clicking on a word to select it or when alt key is hold while selecting a sentence.</li>
+    <li>Unchecking this option allows the pop-up to render outside the browser window, useful if you have a big screen and use the browser in window mode.</li>
   </ol>
 
   <script src="index.js"></script>

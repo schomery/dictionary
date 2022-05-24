@@ -15,10 +15,12 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
     'mheight': 600,
     'translate-styles': '',
     'scale': 1.0,
+    'force-inside': true,
     'hide-translator': true,
     'google-extra': '',
     'domain': 'com'
   }, prefs => {
+    console.log('prefs', prefs);
     chrome.windows.get(tab.windowId, async (win) => {
       if (a[0].position) {
         Object.assign(position, a[0].position);
@@ -29,11 +31,12 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
       }
 
       // Avoid popup outside the screen
-      const currentWindow = await browser.windows.getCurrent();
-      console.log('currentWindow', currentWindow);
-      const { height, width } = currentWindow;
-      position.sy = Math.min(position.sy, height - prefs.mheight);
-      position.sx = Math.min(position.sx, width - prefs.width);
+      if (prefs['force-inside']) {
+        const currentWindow = await browser.windows.getCurrent();
+        const { height, width } = currentWindow;
+        position.sy = Math.min(position.sy, height - prefs.mheight);
+        position.sx = Math.min(position.sx, width - prefs.width);
+      }
 
       const url = 'https://translate.google.' + prefs.domain + '/?' +
         (prefs['google-extra'] ? prefs['google-extra'] + '&' : '') +
