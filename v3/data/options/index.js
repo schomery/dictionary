@@ -11,6 +11,7 @@ function restore() {
     'offset-y': 0,
     'domain': 'com',
     'use-pointer': true,
+    'force-inside': true,
     'direct-frame': false,
     'google-page': true,
     'bing-page': false,
@@ -22,6 +23,7 @@ function restore() {
     'google-extra': '',
     'bing-extra': 'from=&to=fr'
   }, prefs => {
+    document.getElementById('force-inside').checked = prefs['force-inside'];
     document.getElementById('width').value = prefs.width;
     document.getElementById('mheight').value = prefs.mheight;
     document.getElementById('scale').value = prefs.scale;
@@ -51,6 +53,7 @@ function restore() {
 
 function save() {
   const prefs = {
+    'force-inside': document.getElementById('force-inside').checked,
     'width': Math.min(Math.max(Number(document.getElementById('width').value), 300), 2000),
     'mheight': Number(document.getElementById('mheight').value),
     'scale': Math.min(Math.max(parseFloat(document.getElementById('scale').value), 0.5), 1.0),
@@ -151,3 +154,10 @@ document.getElementById('reset').addEventListener('click', e => {
     });
   }
 });
+
+// links
+for (const a of [...document.querySelectorAll('[data-href]')]) {
+  if (a.hasAttribute('href') === false) {
+    a.href = chrome.runtime.getManifest().homepage_url + '#' + a.dataset.href;
+  }
+}

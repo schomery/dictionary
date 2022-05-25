@@ -1,3 +1,5 @@
+/* global browser */
+
 'use strict';
 
 const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScript({
@@ -20,7 +22,7 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
     'google-extra': '',
     'domain': 'com'
   }, prefs => {
-    chrome.windows.get(tab.windowId, async (win) => {
+    chrome.windows.get(tab.windowId, async win => {
       if (a[0].position) {
         Object.assign(position, a[0].position);
       }
@@ -32,7 +34,7 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
       // Avoid popup outside the screen
       if (prefs['force-inside']) {
         const currentWindow = await browser.windows.getCurrent();
-        const { height, width } = currentWindow;
+        const {height, width} = currentWindow;
         position.sy = Math.min(position.sy, height - prefs.mheight);
         position.sx = Math.min(position.sx, width - prefs.width);
       }

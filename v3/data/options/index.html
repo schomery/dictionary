@@ -13,23 +13,23 @@
       <col>
     </colgroup>
     <tr>
-      <td>Translator's width (in px)<sup>1</sup>:</td>
+      <td>Translator's <a data-href="faq9" target="_blank">width</a> (in px):</td>
       <td align="right"><input id="width" type="number" min=300 max=1000></td>
     </tr>
     <tr>
-      <td>Translator's maximum height (in px)<sup>7</sup>:</td>
+      <td>Translator's <a data-href="faq10" target="_blank">maximum height</a> (in px):</td>
       <td align="right"><input id="mheight" type="number"></td>
     </tr>
     <tr>
-      <td>Translator's scaling (0.5 - 1.0)<sup>2</sup>:</td>
+      <td>Translator's <a data-href="faq11" target="_blank">scaling (0.5 - 1.0)</a>:</td>
       <td align="right"><input id="scale" type="number" step="0.01" min="0.5" max="1.0"></td>
     </tr>
     <tr>
-      <td>Offset in x direction for translator's bubble (in px)<sup>3</sup>:</td>
+      <td><a target="_blank" data-href="faq12">Offset in x direction</a> for translator's bubble (in px):</td>
       <td align="right"><input id="offset-x" type="number"></td>
     </tr>
     <tr>
-      <td>Offset in y direction for translator's bubble (in px)<sup>4</sup>:</td>
+      <td>Offset in y direction for translator's bubble (in px):</td>
       <td align="right"><input id="offset-y" type="number"></td>
     </tr>
     <tr>
@@ -57,7 +57,7 @@
       </td>
     </tr>
     <tr>
-      <td>Browser-action button<sup>10</sup>:</td>
+      <td><a data-href="faq15" target="_blank">Action button</a>:</td>
       <td align="right">
         <select id="default-action">
           <option value="open-google">Use Google Translate</option>
@@ -66,8 +66,12 @@
       </td>
     </tr>
     <tr>
-      <td><label  style="display: inline-block;" for="hide-translator">Hide translation section<sup>11</sup></label>:</td>
+      <td><label  style="display: inline-block;" for="hide-translator">Hide <a target="_blank" data-href="faq16">translation section</a>:</td>
       <td align="right"><input id="hide-translator" type="checkbox"></td>
+    </tr>
+    <tr>
+      <td><label  style="display: inline-block;" for="force-inside">Always <a target="_blank" data-href="faq17">render pop-up inside</a> the current window<sup>13</sup></label>:</td>
+      <td align="right"><input id="force-inside" type="checkbox"></td>
     </tr>
     <tr>
       <td><label  style="display: inline-block;" for="google-extra">Google's extra arguments:</label>:</td>
@@ -89,7 +93,7 @@
       <tr>
         <td><input type="radio" id="use-pointer" name="selection"></td>
         <td>
-          <label for="use-pointer">Display word selection bubble<sup>5</sup></label>
+          <label for="use-pointer">Display word selection <a data-href="13" target="_blank">bubble</a></label>
         </td>
       </tr>
       <tr>
@@ -137,10 +141,10 @@
     </thead>
     <tbody>
       <tr>
-        <td colspan="2">Google Translate styling<sup>9</sup></td>
+        <td colspan="2">Google Translate <a target="_blank" data-href="14">styling</a></td>
       </tr>
       <tr>
-        <td colspan="2"><textarea id="translate-styles" rows="4" placeholder="e.g.: body {background-color: red;}"></textarea></td>
+        <td colspan="2"><textarea id="translate-styles" rows="8" placeholder="e.g.: body {background-color: red;}"></textarea></td>
       </tr>
     </tbody>
     <thead>
@@ -151,7 +155,7 @@
     <tbody>
       <tr>
         <td><input id="faqs" type="checkbox"></td>
-        <td>Open FAQs page on updates<sup>6</sup></td>
+        <td>Open FAQs page on updates</td>
       </tr>
     </tbody>
   </table>
@@ -161,22 +165,6 @@
     <button id="support">Support Development</button>&nbsp;-&nbsp;<button id="save">Save Options</button>
     <span id="toast"></span>
   </p>
-
-  <hr>
-  <ol>
-    <li>This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</li>
-    <li>This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.</li>
-    <li>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</li>
-    <li>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</li>
-    <li>If this option is selected, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
-    <li>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</li>
-    <li>Maximum height of the panel. Use zero to disable this option</li>
-    <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
-    <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
-    <li>When translation page using browser-action click, use this engine for translation.</li>
-    <li>If there is a "Definitions of  %s" section, hide the translation section. This is useful to hide the translation section when Google Translator is used for exploring words definition.</li>
-    <li>If this option is selected, the extension directly opens the translation window when alt key is hold while double-clicking on a word to select it or when alt key is hold while selecting a sentence.</li>
-  </ol>
 
   <script src="index.js"></script>
 </body>

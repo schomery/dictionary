@@ -19,11 +19,12 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
     'mheight': 600,
     'translate-styles': '',
     'scale': 1.0,
+    'force-inside': true,
     'hide-translator': true,
     'google-extra': '',
     'domain': 'com'
   }, prefs => {
-    chrome.windows.get(tab.windowId, win => {
+    chrome.windows.get(tab.windowId, async win => {
       if (result.position) {
         Object.assign(position, result.position);
       }
@@ -31,6 +32,14 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
         position.sx = win.left;
         position.sy = win.top;
       }
+
+      // Avoid popup outside the screen
+      if (prefs['force-inside']) {
+        const {height, width} = await chrome.windows.getCurrent();
+        position.sy = Math.min(position.sy, height - prefs.mheight);
+        position.sx = Math.min(position.sx, width - prefs.width);
+      }
+
       const url = 'https://translate.google.' + prefs.domain + '/?' +
         (prefs['google-extra'] ? prefs['google-extra'] + '&' : '') +
         'text=' + encodeURIComponent(query);
@@ -41,13 +50,12 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
         width: parseInt(prefs.width),
         height: parseInt(prefs.mheight),
         type: 'popup'
-      }, w => {
-        if (/Firefox/.test(navigator.userAgent)) {
-          chrome.windows.update(w.id, {
-            left: parseInt(position.sx),
-            top: parseInt(position.sy)
-          });
-        }
+      }).catch(() => chrome.windows.create({
+        url,
+        width: parseInt(prefs.width),
+        height: parseInt(prefs.mheight),
+        type: 'popup'
+      })).then(w => {
         prefs.permanent = permanent;
         open.ids[w.tabs[0].id] = prefs;
       });

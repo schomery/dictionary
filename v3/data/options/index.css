@@ -15,6 +15,10 @@ input[type=button] {
   box-shadow: rgba(0, 0, 0, 0.08) 0 1px 0, rgba(255, 255, 255, 0.75) 0 1px 2px inset;
   text-shadow: rgb(240, 240, 240) 0 1px 0;
 }
+input[type=number] {
+  width: 60px;
+  outline: none;
+}
 select,
 button,
 textarea,
@@ -28,6 +32,7 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
+  margin-top: 5px;
 }
 textarea,
 input[type=text],
@@ -43,31 +48,17 @@ input[type=number]:focus {
 a,
 a:visited {
   color: #07c;
-}
-label {
-  display: block;
-  padding: 3px 0;
-}
-input[type=number] {
-  width: 60px;
-  outline: none;
+  text-decoration: none;
 }
 label {
   white-space: nowrap;
+  display: block;
+  padding: 3px 0;
 }
 label p {
   font-size: 80%;
   color: #bfbfbf;
   margin: 5px 10px;
-}
-textarea {
-  margin-top: 5px;
-  width: 100%;
-  height: 100px;
-}
-hr {
-  border: none;
-  border-top: dashed 1px #ccc;
 }
 ol {
   margin: 0;
