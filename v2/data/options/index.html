@@ -4,229 +4,254 @@
   <title>Options Page :: Dictionary Anywhere</title>
   <meta charset="utf-8">
   <style>
-    label {
-      display: block;
-      padding: 3px 0;
+    html, body {
+      background: transparent;
+      font-size: 16px;
     }
-    input[type=number] {
-      width: 60px;
-      outline: none;
+    @media (prefers-color-scheme: dark) {
+      html, body {
+        background: #23222b;
+        color: rgb(191, 191, 201);
+      }
     }
-    label {
-      white-space: nowrap;
+    .panel-formElements-item {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
     }
-    label p {
-      font-size: 80%;
-      color: #bfbfbf;
-      margin: 5px 10px;
+    input, select, button {
+      font-size: inherit;
+      max-width: 50%;
+      flex-shrink: 0;
     }
-    textarea {
-      margin-top: 5px;
-      width: 100%;
-      height: 100px;
+    input[type="number"] {
+      max-width: 100px;
     }
-    hr {
-      border: none;
-      border-top: dashed 1px #ccc;
+    .panel-formElements-item.radio {
+      justify-content: flex-start;
     }
+    .panel-formElements-item label {
+      flex-shrink: unset;
+      text-align: left;
+    }
+
     ol {
-      margin: 0;
-      padding: 0 15px;
       font-size: 90%;
-      color: #555;
     }
-    th {
-      position: relative;
-      font-weight: normal;
+
+    hr {
+      width: 100%;
     }
-    th span {
-      padding: 2px 10px;
-      background-color: #eee;
-    }
-    th::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 0.6em;
-      border-top: 1px dotted black;
-      z-index: -1;
+
+    label small {
+      opacity: 80%;
+      padding: 15px;
+      display: inline-block;
     }
   </style>
 </head>
-
 <body>
-  <table width="100%">
-    <colgroup>
-      <col>
-      <col>
-    </colgroup>
-    <tr>
-      <td>Translator's width (in px)<sup>1</sup>:</td>
-      <td align="right"><input id="width" type="number" min=300 max=1000></td>
-    </tr>
-    <tr>
-      <td>Translator's maximum height (in px)<sup>7</sup>:</td>
-      <td align="right"><input id="mheight" type="number"></td>
-    </tr>
-    <tr>
-      <td>Translator's scaling (0.5 - 1.0)<sup>2</sup>:</td>
-      <td align="right"><input id="scale" type="number" step="0.01" min="0.5" max="1.0"></td>
-    </tr>
-    <tr>
-      <td>Offset in x direction for translator's bubble (in px)<sup>3</sup>:</td>
-      <td align="right"><input id="offset-x" type="number"></td>
-    </tr>
-    <tr>
-      <td>Offset in y direction for translator's bubble (in px)<sup>4</sup>:</td>
-      <td align="right"><input id="offset-y" type="number"></td>
-    </tr>
-    <tr>
-      <td>Translator's engine:</td>
-      <td align="right">
-        <select id="domain">
-          <option value="com">translate.google.com</option>
-          <option value="com.hk">translate.google.com.hk</option>
-          <option value="com.tr">translate.google.com.tr</option>
-          <option value="com.tw">translate.google.com.tw</option>
-          <option value="com.ua">translate.google.com.ua</option>
-          <option value="com.as">translate.google.com.as</option>
-          <option value="com.vn">translate.google.com.vn</option>
-          <option value="co.in">translate.google.co.in</option>
-          <option value="co.jp">translate.google.co.jp</option>
-          <option value="co.kr">translate.google.co.kr</option>
-          <option value="co.uk">translate.google.co.uk</option>
-          <option value="cn">translate.google.cn</option>
-          <option value="de">translate.google.de</option>
-          <option value="fr">translate.google.fr</option>
-          <option value="it">translate.google.it</option>
-          <option value="pl">translate.google.pl</option>
-          <option value="ru">translate.google.ru</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td>Browser-action button<sup>10</sup>:</td>
-      <td align="right">
-        <select id="default-action">
-          <option value="open-google">Use Google Translate</option>
-          <option value="open-bing">Use Bing Translate</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="hide-translator">Hide translation section<sup>11</sup></label>:</td>
-      <td align="right"><input id="hide-translator" type="checkbox"></td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="google-extra">Google's extra arguments:</label>:</td>
-      <td align="right"><input id="google-extra" type="text"></td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="bing-extra">Bing's extra arguments:</label>:</td>
-      <td align="right"><input id="bing-extra" type="text"></td>
-    </tr>
-  </table>
+  <div class="panel-section panel-section-formElements">
+    <h2>Options</h2>
+    <div class="panel-formElements-item browser-style">
+      <label for="width">
+        Translator's width (in px)
+        <br>
+        <small>
+          This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.
+        </small>
+      </label>
+      <input id="width" type="number" min=300 max=1000>
+    </div>
 
-  <table width=100%>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Bubble vs. context menu</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input type="radio" id="use-pointer" name="selection"></td>
-        <td>
-          <label for="use-pointer">Display word selection bubble<sup>5</sup></label>
-        </td>
-      </tr>
-      <tr>
-        <td><input type="radio" id="use-selection" name="selection"></td>
-        <td>
-          <label for="use-selection">Add right-click item for text selection context</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input type="radio" id="use-direct" name="selection"></td>
-        <td>
-          <label for="use-direct">Press Alt/Option key, then select a text to directly display the translation window</label>
-        </td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Page Translation (right-click menu)</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input id="google-page" type="checkbox"></td>
-        <td>
-          <label for="google-page">Add "Translate with Google" for "page" and "links" contexts</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input id="bing-page" type="checkbox"></td>
-        <td>
-          <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input id="reuse-page" type="checkbox"></td>
-        <td>
-          <label for="reuse-page">Redirect the page to the translated version when page translation is requested</label>
-        </td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Styling</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td colspan="2">Google Translate styling<sup>9</sup></td>
-      </tr>
-      <tr>
-        <td colspan="2"><textarea id="translate-styles" rows="4" placeholder="e.g.: body {background-color: red;}"></textarea></td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Misc</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input id="faqs" type="checkbox"></td>
-        <td>Open FAQs page on updates<sup>6</sup></td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="panel-formElements-item browser-style">
+      <label for="mheight">Translator's maximum height (in px)
+        <br>
+        <small>
+          Maximum height of the panel. Use zero to disable this option
+        </small>
+      </label>
+      <input id="mheight" type="number">
+    </div>
+      
+    <div class="panel-formElements-item browser-style">
+      <label for="scale">Translator's scaling (0.5 - 1.0)
+        <br>
+        <small>
+          This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.
+        </small>
+      </label>
+      <input id="scale" type="number" step="0.01" min="0.5" max="1.0">
+    </div>
 
-  <p>
-    <button id="reset">Reset</button>
-    <button id="support">Support Development</button>&nbsp;-&nbsp;<button id="save">Save</button>
-    <span id="toast"></span>
-  </p>
+    <div class="panel-formElements-item browser-style">
+      <label for="offset-x">
+        Horizontal offset for translator's bubble (in px)
+        <br>
+        <small>
+          Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.
+        </small>
+      </label>
+      <input id="offset-x" type="number">
+    </div>
 
-  <hr>
-  <ol>
-    <li>This option defines the width of the injected translator. Acceptable values are in the range of 200 to 600. Height of the panel varies based on the content.</li>
-    <li>This option scales the injected translator to the factor between 0.5 to 1.0. If font-size of the injected translator is too big for you scale it and check the result.</li>
-    <li>Offset the bubble's position in x direction. This value can be either positive or negative based on direction of the offset.</li>
-    <li>Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.</li>
-    <li>If this option is selected, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.</li>
-    <li>If this option is checked, the extension displays the FAQs page after each upgrade to notify you about the recent changes.</li>
-    <li>Maximum height of the panel. Use zero to disable this option</li>
-    <li>Styles of this section are added to every page. Make sure to prefix your styles with ".itanywhere-panel" to only target the div and iframe element of this extension</li>
-    <li>Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element</li>
-    <li>When translation page using browser-action click, use this engine for translation.</li>
-    <li>If there is a "Definitions of  %s" section, hide the translation section. This is useful to hide the translation section when Google Translator is used for exploring words definition.</li>
-    <li>If this option is selected, the extension directly opens the translation window when alt key is hold while double-clicking on a word to select it or when alt key is hold while selecting a sentence.</li>
-  </ol>
+    <div class="panel-formElements-item browser-style">
+      <label for="offset-y">
+        Vertical offset for translator's bubble (in px)
+        <br>
+        <small>
+          Offset the bubble's position in y direction. This value can be either positive or negative based on direction of the offset.
+        </small>
+      </label>
+      <input id="offset-y" type="number">
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="domain">Translator's engine
+        <br>
+        <small>
+          When translation page using browser-action click, use this engine for translation.
+        </small>
+      </label>
+      <select class="browser-style" id="domain">
+        <option value="com">translate.google.com</option>
+        <option value="com.hk">translate.google.com.hk</option>
+        <option value="com.tr">translate.google.com.tr</option>
+        <option value="com.tw">translate.google.com.tw</option>
+        <option value="com.ua">translate.google.com.ua</option>
+        <option value="com.as">translate.google.com.as</option>
+        <option value="com.vn">translate.google.com.vn</option>
+        <option value="co.in">translate.google.co.in</option>
+        <option value="co.jp">translate.google.co.jp</option>
+        <option value="co.kr">translate.google.co.kr</option>
+        <option value="co.uk">translate.google.co.uk</option>
+        <option value="cn">translate.google.cn</option>
+        <option value="de">translate.google.de</option>
+        <option value="fr">translate.google.fr</option>
+        <option value="it">translate.google.it</option>
+        <option value="pl">translate.google.pl</option>
+        <option value="ru">translate.google.ru</option>
+      </select>
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="default-action">
+        Browser-action button<sup>10</sup>
+      </label>
+      <select class="browser-style" id="default-action">
+        <option value="open-google">Use Google Translate</option>
+        <option value="open-bing">Use Bing Translate</option>
+      </select>
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="google-extra">
+        Google's extra arguments
+      </label>
+      <input id="google-extra" type="text">
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="bing-extra">
+        Bing's extra arguments
+      </label>
+      <input id="bing-extra" type="text">
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="hide-translator">
+        Hide translation section
+        <br>
+        <small>
+          If there is a "Definitions of  %s" section, hide the translation section. This is useful to hide the translation section when Google Translator is used for exploring words definition.
+        </small>
+      </label>
+      <input id="hide-translator" type="checkbox">
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="force-inside">
+        Always render pop-up inside the current window
+        <br>
+        <small>
+          Unchecking this option allows the pop-up to render outside the browser window, useful if you have a big screen and use the browser in window mode.
+        </small>
+      </label>
+      <input id="force-inside" type="checkbox">
+    </div>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="translate-styles">Google Translate styling
+        <br>
+        <small>
+          Styles of this section only apply to translate.google.com and translate.google.cn inside the extension's frame element.
+        </small>
+      </label>
+    </div>
+    <textarea id="translate-styles"
+      rows="4"
+      style="resize: vertical"
+      placeholder="e.g.: body {background-color: red;}">
+    </textarea>
+
+    <h3>Bubble vs. context menu</h3>
+
+    <div class="panel-formElements-item radio browser-style">      
+      <input type="radio" id="use-pointer" name="selection">
+      <label for="use-pointer">Display word selection Bubble
+        <br>
+        <small>
+          If this option is selected, the extension displays a bubble above all your selections to open the translator panel. If the option is unchecked, a new item is added to the context-menu.
+        </small>
+      </label>
+    </div>
+    <div class="panel-formElements-item radio browser-style">      
+      <input type="radio" id="use-selection" name="selection">
+      <label for="use-selection">Add right-click item for text selection context</label>
+    </div>
+    <div class="panel-formElements-item radio browser-style">      
+      <input type="radio" id="use-direct" name="selection">
+      <label for="use-direct">
+        Press Alt/Option key, then select a text to directly display the translation window
+        <br>
+        <small>
+          If this option is selected, the extension directly opens the translation window when alt key is hold while double-clicking on a word to select it or when alt key is hold while selecting a sentence.
+        </small>
+    </label>
+    </div>
+
+    <h3>Page Translation (right-click menu)</h3>
+
+    <div class="panel-formElements-item browser-style">
+      <label for="google-page">Add "Translate with Google" for "page" and "links" contexts</label>
+      <input id="google-page" type="checkbox">
+    </div>
+    <div class="panel-formElements-item browser-style">
+      <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
+      <input id="bing-page" type="checkbox">
+    </div>
+    <div class="panel-formElements-item browser-style">
+      <label for="reuse-page">Redirect the page to the translated version when page translation is requested</label>
+      <input id="reuse-page" type="checkbox">
+    </div>
+
+    <h3>Updates</h3>
+    <div class="panel-formElements-item browser-style">
+      <label for="faqs">
+        Display the FAQs page after each upgrade to notify you about the recent changes
+      </label>
+      <input id="faqs" type="checkbox">
+    </div>
+  
+    <p>
+      <button class="browser-style" id="reset">🔄 Reset</button>
+      <button class="browser-style" id="support">💖 Support Development</button>
+      <button class="browser-style" id="save">💾 Save</button>
+      <span id="toast"></span>
+    </p>
+  </div>
+
 
   <script src="index.js"></script>
 </body>
