@@ -7,158 +7,83 @@
 </head>
 
 <body>
-  <table width="100%">
-    <colgroup>
-      <col>
-      <col>
-    </colgroup>
-    <tr>
-      <td>Translator's <a data-href="faq9" target="_blank">width</a> (in px):</td>
-      <td align="right"><input id="width" type="number" min=300 max=1000></td>
-    </tr>
-    <tr>
-      <td>Translator's <a data-href="faq10" target="_blank">maximum height</a> (in px):</td>
-      <td align="right"><input id="mheight" type="number"></td>
-    </tr>
-    <tr>
-      <td>Translator's <a data-href="faq11" target="_blank">scaling (0.5 - 1.0)</a>:</td>
-      <td align="right"><input id="scale" type="number" step="0.01" min="0.5" max="1.0"></td>
-    </tr>
-    <tr>
-      <td><a target="_blank" data-href="faq12">Offset in x direction</a> for translator's bubble (in px):</td>
-      <td align="right"><input id="offset-x" type="number"></td>
-    </tr>
-    <tr>
-      <td>Offset in y direction for translator's bubble (in px):</td>
-      <td align="right"><input id="offset-y" type="number"></td>
-    </tr>
-    <tr>
-      <td>Translator's engine:</td>
-      <td align="right">
-        <select id="domain">
-          <option value="com">translate.google.com</option>
-          <option value="com.hk">translate.google.com.hk</option>
-          <option value="com.tr">translate.google.com.tr</option>
-          <option value="com.tw">translate.google.com.tw</option>
-          <option value="com.ua">translate.google.com.ua</option>
-          <option value="com.as">translate.google.com.as</option>
-          <option value="com.vn">translate.google.com.vn</option>
-          <option value="co.in">translate.google.co.in</option>
-          <option value="co.jp">translate.google.co.jp</option>
-          <option value="co.kr">translate.google.co.kr</option>
-          <option value="co.uk">translate.google.co.uk</option>
-          <option value="cn">translate.google.cn</option>
-          <option value="de">translate.google.de</option>
-          <option value="fr">translate.google.fr</option>
-          <option value="it">translate.google.it</option>
-          <option value="pl">translate.google.pl</option>
-          <option value="ru">translate.google.ru</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td><a data-href="faq15" target="_blank">Action button</a>:</td>
-      <td align="right">
-        <select id="default-action">
-          <option value="open-google">Use Google Translate</option>
-          <option value="open-bing">Use Bing Translate</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="hide-translator">Hide <a target="_blank" data-href="faq16">translation section</a>:</td>
-      <td align="right"><input id="hide-translator" type="checkbox"></td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="force-inside">Always <a target="_blank" data-href="faq17">render pop-up inside</a> the current window<sup>13</sup></label>:</td>
-      <td align="right"><input id="force-inside" type="checkbox"></td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="google-extra">Google's extra arguments:</label>:</td>
-      <td align="right"><input id="google-extra" type="text"></td>
-    </tr>
-    <tr>
-      <td><label  style="display: inline-block;" for="bing-extra">Bing's extra arguments:</label>:</td>
-      <td align="right"><input id="bing-extra" type="text"></td>
-    </tr>
-  </table>
+  <div class="snd">
+    <label for="width">Translator's <a data-href="faq9" target="_blank">width</a> (in px):</label>
+    <input id="width" type="number" min=300 max=1000>
+    <label for="mheight">Translator's <a data-href="faq10" target="_blank">maximum height</a> (in px):</label>
+    <input id="mheight" type="number">
+    <label for="scale">Translator's <a data-href="faq11" target="_blank">scaling (0.5 - 1.0)</a>:</label>
+    <input id="scale" type="number" step="0.01" min="0.5" max="1.0">
+    <label for="offset-x"><a target="_blank" data-href="faq12">Offset in x direction</a> for translator's bubble (in px):</label>
+    <input id="offset-x" type="number">
+    <label for="offset-y">Offset in y direction for translator's bubble (in px):</label>
+    <input id="offset-y" type="number">
+    <label for="domain">Translator's engine:</label>
+    <select id="domain">
+      <option value="com">translate.google.com</option>
+      <option value="com.hk">translate.google.com.hk</option>
+      <option value="com.tr">translate.google.com.tr</option>
+      <option value="com.tw">translate.google.com.tw</option>
+      <option value="com.ua">translate.google.com.ua</option>
+      <option value="com.as">translate.google.com.as</option>
+      <option value="com.vn">translate.google.com.vn</option>
+      <option value="co.in">translate.google.co.in</option>
+      <option value="co.jp">translate.google.co.jp</option>
+      <option value="co.kr">translate.google.co.kr</option>
+      <option value="co.uk">translate.google.co.uk</option>
+      <option value="cn">translate.google.cn</option>
+      <option value="de">translate.google.de</option>
+      <option value="fr">translate.google.fr</option>
+      <option value="it">translate.google.it</option>
+      <option value="pl">translate.google.pl</option>
+      <option value="ru">translate.google.ru</option>
+    </select>
+    <label for="default-action"><a data-href="faq15" target="_blank">Action button</a>:</label>
+    <select id="default-action">
+      <option value="open-google">Use Google Translate</option>
+      <option value="open-bing">Use Bing Translate</option>
+    </select>
+    <label for="hide-translator">Hide <a target="_blank" data-href="faq16">translation section</a>:</label>
+    <input id="hide-translator" type="checkbox">
+    <label for="force-inside">Always <a target="_blank" data-href="faq17">render pop-up inside</a> the current window:</label>
+    <input id="force-inside" type="checkbox">
+    <label for="google-extra">Google's extra arguments:</label>
+    <input id="google-extra" type="text">
+    <label for="bing-extra">Bing's extra arguments:</label>
+    <input id="bing-extra" type="text">
+  </div>
 
-  <table width=100%>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Bubble vs. context menu</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input type="radio" id="use-pointer" name="selection"></td>
-        <td>
-          <label for="use-pointer">Display word selection <a data-href="13" target="_blank">bubble</a></label>
-        </td>
-      </tr>
-      <tr>
-        <td><input type="radio" id="use-selection" name="selection"></td>
-        <td>
-          <label for="use-selection">Add right-click item for text selection context</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input type="radio" id="use-direct" name="selection"></td>
-        <td>
-          <label for="use-direct">Press Alt/Option key, then select a text to directly display the translation window</label>
-        </td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Page Translation (right-click menu)</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input id="google-page" type="checkbox"></td>
-        <td>
-          <label for="google-page">Add "Translate with Google" for "page" and "links" contexts</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input id="bing-page" type="checkbox"></td>
-        <td>
-          <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
-        </td>
-      </tr>
-      <tr>
-        <td><input id="reuse-page" type="checkbox"></td>
-        <td>
-          <label for="reuse-page">Redirect the page to the translated version when page translation is requested</label>
-        </td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Styling</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td colspan="2">Google Translate <a target="_blank" data-href="14">styling</a></td>
-      </tr>
-      <tr>
-        <td colspan="2"><textarea id="translate-styles" rows="8" placeholder="e.g.: body {background-color: red;}"></textarea></td>
-      </tr>
-    </tbody>
-    <thead>
-      <tr>
-        <th colspan="2"><span>Misc</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input id="faqs" type="checkbox"></td>
-        <td>Open FAQs page on updates</td>
-      </tr>
-    </tbody>
-  </table>
+  <h3>Bubble vs. context menu</h3>
+
+  <div class="snp">
+    <input type="radio" id="use-pointer" name="selection">
+    <label for="use-pointer">Display word selection <a data-href="13" target="_blank">bubble</a></label>
+    <input type="radio" id="use-selection" name="selection">
+    <label for="use-selection">Add right-click item for text selection context</label>
+    <input type="radio" id="use-direct" name="selection">
+    <label for="use-direct">Press Alt/Option key, then select a text to directly display the translation window</label>
+  </div>
+
+  <h3>Page Translation (right-click menu)</h3>
+  <div class="snp">
+    <input id="google-page" type="checkbox">
+    <label for="google-page">Add "Translate with Google" for "page" and "links" contexts</label>
+    <input id="bing-page" type="checkbox">
+    <label for="bing-page">Add "Translate with Bing" for "page" and "links" contexts</label>
+    <input id="reuse-page" type="checkbox">
+    <label for="reuse-page">Redirect the page to the translated version when page translation is requested</label>
+  </div>
+
+  <h3>Styling</h3>
+
+  <p>Google Translate <a target="_blank" data-href="14">styling</a></p>
+  <textarea id="translate-styles" rows="8" placeholder="e.g.: body {background-color: red;}"></textarea>
+
+  <h3>Misc</h3>
+  <div class="snp">
+    <input id="faqs" type="checkbox">
+    <span>Open FAQs page on updates</span>
+  </div>
 
   <p>
     <button id="reset">Reset</button>

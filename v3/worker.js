@@ -14,6 +14,7 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
     sx: 0,
     sy: 0
   };
+  console.log(position);
   chrome.storage.local.get({
     'width': 400,
     'mheight': 600,
@@ -27,18 +28,22 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
     chrome.windows.get(tab.windowId, async win => {
       if (result.position) {
         Object.assign(position, result.position);
+        console.log(1, position);
       }
       else {
         position.sx = win.left;
         position.sy = win.top;
+        console.log(2);
       }
+      console.log(position);
 
       // Avoid popup outside the screen
       if (prefs['force-inside']) {
-        const {height, width} = await chrome.windows.getCurrent();
-        position.sy = Math.min(position.sy, height - prefs.mheight);
-        position.sx = Math.min(position.sx, width - prefs.width);
+        const {height, width, left, top} = await chrome.windows.getCurrent();
+        position.sy = Math.min(position.sy, top + height - prefs.mheight);
+        position.sx = Math.min(position.sx, left + width - prefs.width);
       }
+      console.log(position);
 
       const url = 'https://translate.google.' + prefs.domain + '/?' +
         (prefs['google-extra'] ? prefs['google-extra'] + '&' : '') +
@@ -50,12 +55,16 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
         width: parseInt(prefs.width),
         height: parseInt(prefs.mheight),
         type: 'popup'
-      }).catch(() => chrome.windows.create({
-        url,
-        width: parseInt(prefs.width),
-        height: parseInt(prefs.mheight),
-        type: 'popup'
-      })).then(w => {
+      }).catch(e => {
+        console.warn(e);
+
+        return chrome.windows.create({
+          url,
+          width: parseInt(prefs.width),
+          height: parseInt(prefs.mheight),
+          type: 'popup'
+        });
+      }).then(w => {
         prefs.permanent = permanent;
         open.ids[w.tabs[0].id] = prefs;
       });
@@ -127,7 +136,7 @@ const onClicked = (info, tab) => {
           title: 'Translate Selection',
           contexts: ['selection'],
           documentUrlPatterns: ['*://*/*']
-        });
+        }, () => chrome.runtime.lastError);
       }
       if (prefs['google-page']) {
         chrome.contextMenus.create({
@@ -135,7 +144,7 @@ const onClicked = (info, tab) => {
           title: 'Translate with Google',
           contexts: ['page', 'link'],
           documentUrlPatterns: ['*://*/*']
-        });
+        }, () => chrome.runtime.lastError);
       }
       if (prefs['bing-page']) {
         chrome.contextMenus.create({
@@ -143,7 +152,7 @@ const onClicked = (info, tab) => {
           title: 'Translate with Bing',
           contexts: ['page', 'link'],
           documentUrlPatterns: ['*://*/*']
-        });
+        }, () => chrome.runtime.lastError);
       }
     });
   };

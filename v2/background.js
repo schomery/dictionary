@@ -34,9 +34,9 @@ const open = (tab, query, frameId, permanent = false) => chrome.tabs.executeScri
       // Avoid popup outside the screen
       if (prefs['force-inside']) {
         const currentWindow = await browser.windows.getCurrent();
-        const {height, width} = currentWindow;
-        position.sy = Math.min(position.sy, height - prefs.mheight);
-        position.sx = Math.min(position.sx, width - prefs.width);
+        const {height, width, left, top} = currentWindow;
+        position.sy = Math.min(position.sy, top + height - prefs.mheight);
+        position.sx = Math.min(position.sx, left + width - prefs.width);
       }
 
       const url = 'https://translate.google.' + prefs.domain + '/?' +
