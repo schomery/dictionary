@@ -33,6 +33,7 @@ Ctrl/Meta + Click to open permanent Google Translate`;
         div.style.top = (position.y - 25 + prefs['offset-y']) + 'px';
       }
       div.classList.add('itanywhere-activator');
+
       div.onclick = e => {
         chrome.runtime.sendMessage({
           method: 'open-translator',
@@ -46,12 +47,13 @@ Ctrl/Meta + Click to open permanent Google Translate`;
     });
   },
   hide() {
-    if (pointer.div) {
-      pointer.div.remove();
-      delete pointer.div;
+    for (const div of document.querySelectorAll('.itanywhere-activator')) {
+      div.remove();
     }
+    delete pointer.div;
   }
 };
+self.pointer = pointer;
 
 function select() {
   const selection = getSelection();

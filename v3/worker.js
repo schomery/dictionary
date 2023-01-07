@@ -14,7 +14,6 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
     sx: 0,
     sy: 0
   };
-  console.log(position);
   chrome.storage.local.get({
     'width': 400,
     'mheight': 600,
@@ -28,14 +27,11 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
     chrome.windows.get(tab.windowId, async win => {
       if (result.position) {
         Object.assign(position, result.position);
-        console.log(1, position);
       }
       else {
         position.sx = win.left;
         position.sy = win.top;
-        console.log(2);
       }
-      console.log(position);
 
       // Avoid popup outside the screen
       if (prefs['force-inside']) {
@@ -43,7 +39,6 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
         position.sy = Math.min(position.sy, top + height - prefs.mheight);
         position.sx = Math.min(position.sx, left + width - prefs.width);
       }
-      console.log(position);
 
       const url = 'https://translate.google.' + prefs.domain + '/?' +
         (prefs['google-extra'] ? prefs['google-extra'] + '&' : '') +
@@ -76,6 +71,20 @@ open.ids = {};
 const onMessage = (request, sender, response) => {
   if (request.method === 'open-translator') {
     open(sender.tab, request.query, sender.frameId, request.permanent);
+
+    chrome.scripting.executeScript({
+      target: {
+        tabId: sender.tab.id,
+        allFrames: true
+      },
+      func: () => {
+        try {
+          clearTimeout(self.pointer.rid);
+          self.pointer.hide();
+        }
+        catch (e) {}
+      }
+    });
   }
   else if (request.method === 'close') {
     chrome.tabs.remove(sender.tab.id);
