@@ -22,6 +22,7 @@ Ctrl/Meta + Click to open permanent Google Translate`;
       'offset-y': 0
     }, prefs => {
       const {selection, query} = o;
+
       const range = selection.getRangeAt(0);
       const rect = [...range.getClientRects()].pop();
       if (rect) {

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "version": "0.6.1",
+  "version": "0.6.2",
   "name": "Popup View for Google™ Translate",
   "description": "Access to a floating multilingual Google™ Translate popup on any webpage",
-  "homepage_url": "https://add0n.com/dictionary.html",
+  "homepage_url": "https://webextension.org/listing/dictionary.html",
   "permissions": [
     "activeTab",
     "scripting",

@@ -43,6 +43,7 @@ const open = (tab, query, frameId, permanent = false) => chrome.scripting.execut
       const url = 'https://translate.google.' + prefs.domain + '/?' +
         (prefs['google-extra'] ? prefs['google-extra'] + '&' : '') +
         'text=' + encodeURIComponent(query);
+
       chrome.windows.create({
         url,
         left: parseInt(position.sx),
