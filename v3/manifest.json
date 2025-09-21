@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "0.6.2",
+  "version": "0.6.3",
   "name": "Popup View for Google™ Translate",
   "description": "Access to a floating multilingual Google™ Translate popup on any webpage",
   "homepage_url": "https://webextension.org/listing/dictionary.html",
@@ -23,7 +23,8 @@
     "512": "data/icons/512.png"
   },
   "background": {
-    "service_worker": "worker.js"
+    "service_worker": "worker.js",
+    "scripts": ["worker.js"]
   },
   "action": {},
   "content_scripts": [{
@@ -76,7 +77,8 @@
     "run_at": "document_start"
   }],
   "options_ui": {
-    "page": "data/options/index.html"
+    "page": "data/options/index.html",
+    "open_in_tab": true
   },
   "web_accessible_resources": [{
       "resources": ["data/inject/selector.png"],

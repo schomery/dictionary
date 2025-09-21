@@ -4,9 +4,8 @@ chrome.runtime.sendMessage({
   if (!prefs) {
     return;
   }
-  console.log(prefs);
   if (prefs.permanent !== true) {
-    window.addEventListener('blur', () => chrome.runtime.sendMessage({
+    addEventListener('blur', () => chrome.runtime.sendMessage({
       method: 'close'
     }));
   }
@@ -23,7 +22,7 @@ chrome.runtime.sendMessage({
     document.documentElement.style.width = `${1 / prefs.scale * 100}%`;
   }
 
-  window.addEventListener('keyup', e => {
+  addEventListener('keyup', e => {
     if (e.code === 'Escape') {
       chrome.runtime.sendMessage({
         method: 'close'

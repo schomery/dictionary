@@ -2,8 +2,14 @@
 
 const toast = document.getElementById('toast');
 
-function restore() {
-  chrome.storage.local.get({
+const notify = (message, timeout = 750) => {
+  toast.textContent = message;
+  clearTimeout(notify.id);
+  notify.id = setTimeout(() => toast.textContent = '', timeout);
+};
+
+async function restore() {
+  const prefs = await chrome.storage.local.get({
     'width': 400,
     'mheight': 600,
     'scale': 1.0,
@@ -22,36 +28,35 @@ function restore() {
     'hide-translator': true,
     'google-extra': '',
     'bing-extra': 'from=&to=fr'
-  }, prefs => {
-    document.getElementById('force-inside').checked = prefs['force-inside'];
-    document.getElementById('width').value = prefs.width;
-    document.getElementById('mheight').value = prefs.mheight;
-    document.getElementById('scale').value = prefs.scale;
-    document.getElementById('offset-x').value = prefs['offset-x'];
-    document.getElementById('offset-y').value = prefs['offset-y'];
-    document.getElementById('domain').value = prefs.domain;
-    document.getElementById('google-page').checked = prefs['google-page'];
-    document.getElementById('bing-page').checked = prefs['bing-page'];
-    document.getElementById('reuse-page').checked = prefs['reuse-page'];
-    document.getElementById('default-action').value = prefs['default-action'];
-    document.getElementById('faqs').checked = prefs.faqs;
-    document.getElementById('hide-translator').checked = prefs['hide-translator'];
-    document.getElementById('google-extra').value = prefs['google-extra'];
-    document.getElementById('bing-extra').value = prefs['bing-extra'];
-    if (prefs['use-pointer'] && prefs['direct-frame'] === false) {
-      document.getElementById('use-pointer').checked = true;
-    }
-    else if (prefs['direct-frame']) {
-      document.getElementById('use-direct').checked = true;
-    }
-    else {
-      document.getElementById('use-selection').checked = true;
-    }
-    document.getElementById('translate-styles').value = prefs['translate-styles'];
   });
+  document.getElementById('force-inside').checked = prefs['force-inside'];
+  document.getElementById('width').value = prefs.width;
+  document.getElementById('mheight').value = prefs.mheight;
+  document.getElementById('scale').value = prefs.scale;
+  document.getElementById('offset-x').value = prefs['offset-x'];
+  document.getElementById('offset-y').value = prefs['offset-y'];
+  document.getElementById('domain').value = prefs.domain;
+  document.getElementById('google-page').checked = prefs['google-page'];
+  document.getElementById('bing-page').checked = prefs['bing-page'];
+  document.getElementById('reuse-page').checked = prefs['reuse-page'];
+  document.getElementById('default-action').value = prefs['default-action'];
+  document.getElementById('faqs').checked = prefs.faqs;
+  document.getElementById('hide-translator').checked = prefs['hide-translator'];
+  document.getElementById('google-extra').value = prefs['google-extra'];
+  document.getElementById('bing-extra').value = prefs['bing-extra'];
+  if (prefs['use-pointer'] && prefs['direct-frame'] === false) {
+    document.getElementById('use-pointer').checked = true;
+  }
+  else if (prefs['direct-frame']) {
+    document.getElementById('use-direct').checked = true;
+  }
+  else {
+    document.getElementById('use-selection').checked = true;
+  }
+  document.getElementById('translate-styles').value = prefs['translate-styles'];
 }
 
-function save() {
+async function save() {
   const prefs = {
     'force-inside': document.getElementById('force-inside').checked,
     'width': Math.min(Math.max(Number(document.getElementById('width').value), 300), 2000),
@@ -73,21 +78,20 @@ function save() {
     'bing-extra': document.getElementById('bing-extra').value
   };
 
-  chrome.storage.local.set(prefs, () => {
-    toast.textContent = 'Options saved.';
-    setTimeout(() => toast.textContent = '', 750);
-    restore();
-  });
+  await chrome.storage.local.set(prefs);
+
+  notify('Options saved.');
+  await restore();
 }
 
 document.addEventListener('DOMContentLoaded', restore);
-document.getElementById('save').addEventListener('click', () => {
+document.getElementById('save').addEventListener('click', async () => {
   try {
-    save();
+    await save();
   }
   catch (e) {
-    toast.textContent = e.message;
-    setTimeout(() => toast.textContent = '', 750);
+    console.error(e);
+    notify(e.message);
   }
 });
 
@@ -143,8 +147,7 @@ document.getElementById('support').addEventListener('click', () => chrome.tabs.c
 // reset
 document.getElementById('reset').addEventListener('click', e => {
   if (e.detail === 1) {
-    toast.textContent = 'Double-click to reset!';
-    window.setTimeout(() => toast.textContent = '', 750);
+    notify('Double-click to reset!');
   }
   else {
     localStorage.clear();
